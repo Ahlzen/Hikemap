@@ -30,9 +30,14 @@
 }
 
 
+////// Water bodies (lakes, ponds, wide rivers etc) and ocean
 
-////// Water bodies (lakes, ponds, wide rivers etc)
+// NOTE: use double line-width, since half will
+// be overdrawn by the fill
 
+// TODO: use generalized coastline polys at lower zoom levels
+
+#coastline [zoom >= 8],
 #waterbody [zoom >= 8] {
 	line-color: @wateroutline;
 	line-width: 0.4;
@@ -42,6 +47,7 @@
 	[zoom >= 16] { line-width: 2.5; }
 }
 
+#ocean,
 #waterbody::fill [zoom >= 8] {
 	polygon-fill: @waterfill;
 }

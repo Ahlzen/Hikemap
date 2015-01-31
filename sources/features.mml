@@ -12,7 +12,7 @@
       "srs": "${EPSG3857}",
       "Datasource": {
         ${DBSETTINGS},
-        "table": "(SELECT way, waterway, name, intermittent FROM ${OSM_TABLE_PREFIX}line WHERE waterway IS NOT NULL) AS hydro"
+        "table": "(SELECT way, waterway, name, intermittent FROM ${OSM_TABLE_PREFIX}line WHERE waterway IS NOT NULL) AS waterway"
       }},
     {
       "name": "waterbody",
@@ -20,7 +20,23 @@
       "srs": "${EPSG3857}",
       "Datasource": {
         ${DBSETTINGS},
-        "table": "(SELECT way, waterway, \"natural\", water, name, intermittent FROM ${OSM_TABLE_PREFIX}polygon WHERE (waterway = 'riverbank') OR (\"natural\" = 'water')) AS hydro"
+        "table": "(SELECT way, waterway, \"natural\", water, name, intermittent FROM ${OSM_TABLE_PREFIX}polygon WHERE (waterway = 'riverbank') OR (\"natural\" = 'water')) AS waterbody"
+      }},
+    {
+      "name": "coastline",
+      "id": "coastline",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way FROM ${OSM_TABLE_PREFIX}line WHERE \"natural\" = 'coastline') AS coastline"
+      }},
+    {
+      "name": "ocean",
+      "id": "ocean",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        "type": "shape",
+        "file": "../data/osm/water_polygons.shp"
       }},
     {
       "name": "hydro_barrier_line",
@@ -29,7 +45,7 @@
       "srs": "${EPSG3857}",
       "Datasource": {
         ${DBSETTINGS},
-        "table": "(SELECT way, waterway, name FROM ${OSM_TABLE_PREFIX}line WHERE waterway IN ('dam','weir','lock_gate')) AS hydro"
+        "table": "(SELECT way, waterway, name FROM ${OSM_TABLE_PREFIX}line WHERE waterway IN ('dam','weir','lock_gate')) AS barriers"
       }},
     {
       "name": "hydro_barrier_poly",
@@ -38,7 +54,7 @@
       "srs": "${EPSG3857}",
       "Datasource": {
         ${DBSETTINGS},
-        "table": "(SELECT way, waterway, name FROM ${OSM_TABLE_PREFIX}polygon WHERE waterway IN ('dam','weir','lock_gate')) AS hydro"
+        "table": "(SELECT way, waterway, name FROM ${OSM_TABLE_PREFIX}polygon WHERE waterway IN ('dam','weir','lock_gate')) AS barriers"
       }}
   ]
 }
