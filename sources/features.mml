@@ -1,0 +1,44 @@
+{
+  "srs": "${EPSG3857}",
+  "Stylesheet": [
+    "common.mss",
+    "hydro.mss"
+  ],
+  "Layer":
+  [
+    {
+      "name": "waterway",
+      "id": "waterway",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way, waterway, name, intermittent FROM ${OSM_TABLE_PREFIX}line WHERE waterway IS NOT NULL) AS hydro"
+      }},
+    {
+      "name": "waterbody",
+      "id": "waterbody",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way, waterway, \"natural\", water, name, intermittent FROM ${OSM_TABLE_PREFIX}polygon WHERE (waterway = 'riverbank') OR (\"natural\" = 'water')) AS hydro"
+      }},
+    {
+      "name": "hydro_barrier_line",
+      "id": "hydro_barrier_line",
+      "class": "hydro_barrier",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way, waterway, name FROM ${OSM_TABLE_PREFIX}line WHERE waterway IN ('dam','weir','lock_gate')) AS hydro"
+      }},
+    {
+      "name": "hydro_barrier_poly",
+      "id": "hydro_barrier_poly",
+      "class": "hydro_barrier hydro_barrier_filled",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way, waterway, name FROM ${OSM_TABLE_PREFIX}polygon WHERE waterway IN ('dam','weir','lock_gate')) AS hydro"
+      }}
+  ]
+}

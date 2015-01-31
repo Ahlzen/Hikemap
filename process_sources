@@ -1,0 +1,51 @@
+#!/bin/bash
+
+source ./config
+
+SOURCEDIR="sources"
+DESTDIR="processed"
+
+# awk program to substitute environment variables
+AWKFILTER='{while(match($0,"[$]{[^}]*}")){var=substr($0,RSTART+2,RLENGTH-3);gsub("[$]{"var"}",ENVIRON[var])}}1'
+
+# grep filter to remove millstone junk
+# see carto issue #212:
+# https://github.com/mapbox/carto/issues/212
+MILLSTONEFILTER="\[millstone\]"
+
+# "macros" used in carto templates:
+export DBSETTINGS='
+	"type": "postgis",
+	"host": "${DB_HOST}",
+	"dbname": "${DB_NAME}",
+	"user": "${DB_USER}",
+	"extent": "${EXTENTS_MERCATOR}"'
+
+mkdir -pv "$DESTDIR"
+
+# Generate Mapnik XML from Carto templates
+for SRC in `ls ${SOURCEDIR}/*.mml`; do
+    echo "Processing $SRC..."
+    DST="${DESTDIR}/`basename $SRC .mml`.xml"
+           
+    # use an intermediate temp file since carto can't read
+    # from stdin, and we need to run the awk filter *before*
+    # the carto parser
+    TEMPFILE="${SOURCEDIR}/___`basename $SRC`"
+    
+    cat $SRC | awk "$AWKFILTER" > $TEMPFILE
+    carto $TEMPFILE | grep -v "$MILLSTONEFILTER" > $DST
+    rm $TEMPFILE
+        
+    # read errors from output file
+    # (carto writes these to stdout and always returns 0)
+    cat $DST | grep "carto:"
+done
+
+# Process xml,inc,cfg files
+for SRC in `ls ${SOURCEDIR}/*.{xml,cfg}`; do
+    echo "Processing $SRC..."
+    DST="${DESTDIR}/`basename $SRC`"        
+    cat $SRC | awk "$AWKFILTER" > $DST
+done
+
