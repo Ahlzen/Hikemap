@@ -3,10 +3,16 @@ Required packages
 
 
 
+postgresql postgresql-client postgis wget
 tilestache blit(npm) python-numpy python-scipy python-pil ... 
-
-gdal-bin proj-bin libmapnik mapnik-utils node-carto
+ proj-bin libmapnik mapnik-utils node-carto unzip
 fonts-dejavu fonts-dejavu-extra liberation-*
+
+gdal-bin (>= 1.11 for NHD data in .gdb format)
+
+postgresql-9.3-postgis-2.1 ?
+(postgresql and postgis versions may depend on your distro)
+
 # TODO: Check extra fonts
 
 
@@ -18,16 +24,3 @@ TODO
 
 
 
-    {
-      "name": "hydro_poly",
-      "id": "hydro_poly",
-      "srs": "${EPSG3857}",
-      "Datasource": {
-        ${DBSETTINGS},
-        "table": "(
-          SELECT way, waterway, natural, water, name, intermittent
-          FROM ${OSM_TABLE_PREFIX}_poly
-          WHERE waterway = 'riverbank' OR natural = 'water'
-          ) AS waterway"
-      }
-    }

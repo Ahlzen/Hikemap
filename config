@@ -13,7 +13,10 @@ export DB_NAME="gis"
 export CONTOURS_TABLE="contours50ft"
 
 # Table prefix for OSM data
-export OSM_TABLE_PREFIX="planet_osm_"
+export OSM_TABLE_PREFIX="planet_osm"
+
+# Table prefix for NHD data
+export NHD_TABLE_PREFIX="hikemap_nhd"
 
 # Command that SQL command can be piped to
 export DBCMD="psql -q $DB_NAME"
@@ -30,6 +33,7 @@ export NED13URL="ftp://rockyftp.cr.usgs.gov/vdelivery/Datasets/Staged/NED/13/IMG
 # Download URL for NLCD 2011 Tree Canopy (cartographic edition)
 export CANOPYURL="http://toposm.ahlzen.com/data/nlcd_2011_USFS_tree_canopy_2011_edition_2014_03_31_cartographic.zip"
 
+# Proj4-style SRS definitions
 export EPSG4326="+proj=latlong +datum=WGS84"
 export EPSG3857="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
 export EPSG5070="+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=23 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"

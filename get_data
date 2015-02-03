@@ -136,7 +136,11 @@ function generate_contours {
   echo "ALTER TABLE $CONTOURS_TABLE ADD COLUMN ele_ft INT;" | $DBCMD
   echo "UPDATE $CONTOURS_TABLE SET ele_ft = CAST(ele * 3.28085 AS INT) WHERE ele_ft IS NULL" | $DBCMD
   rm temp/*
+
+  echo "Analyzing contours table"
+  echo "VACUUM ANALYZE $CONTOURS_TABLE" | $DBCMD
 }
+
 
 #### OSM Water Polygons
 function get_water_polygons {
@@ -147,6 +151,58 @@ function get_water_polygons {
   fi
   unzip -j data/osm/water-polygons-split-3857.zip -d data/osm
   shapeindex data/osm/water_polygons.shp
+}
+
+
+#### NHD
+#
+# NOTE: This downloads ALL subregions, since there is no simple way to
+# calculate which ones are needed. They are cropped to the relevant
+# region before importing, however.
+function get_nhd {
+  
+  echo "Downloading NHD High Resolution"
+  mkdir -pv data/nhd/hi
+  NHDURLS=`wget -O - ftp://nhdftp.usgs.gov/DataSets/Staged/SubRegions/FileGDB/HighResolution/ | egrep -o -E "ftp://nhdftp.usgs.gov:21/DataSets/Staged/SubRegions/FileGDB/HighResolution/NHDH...._931v220\.zip"`
+  #echo $NHDURLS
+  for url in $NHDURLS ; do
+    BASE=`basename $url .zip`
+    if [[ ! -f data/nhd/hi/$BASE ]] ; then
+      wget -O data/nhd/hi/$BASE.gdb.zip "$url"
+    fi
+  done
+}
+
+function process_nhd {
+  for f in data/nhd/hi/NHDH*.gdb.zip ; do
+    BASE=`basename $f .gdb.zip`
+    # Extract relevant layers as shapefiles, clip to extent
+    ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:3857 \
+      -clipdst $XMINM $YMINM $XMAXM $YMAXM \
+      temp/$BASE $f NHDPoint NHDFlowline NHDLine NHDArea NHDWaterbody
+  done
+}
+
+function import_nhd {
+  TYPE=$1 ; if [[ -z $1 ]] ; then
+    echo "No type (Area, Flowline, Line, Point, Waterbody) specified"
+    return 1
+  fi
+  TABLE="${NHD_TABLE_PREFIX}_$TYPE"
+  echo "Importing $TABLE"
+  echo "DROP TABLE IF EXISTS $TABLE" | $DBCMD
+  echo "DROP INDEX IF EXISTS ${TABLE}_idx_fcode" | $DBCMD
+  shp2pgsql -s 3857 -p -g way -I `ls temp/NHDH*v220/NHD${TYPE}.shp | head -n 1` $TABLE | $DBCMD
+  for f in temp/NHDH*/NHD${TYPE}.shp ; do
+   echo $f
+   shp2pgsql -s 3857 -a -g way $f $TABLE | $DBCMD
+  done
+  # index on fcode (- this is) frequently used to filter features)
+  echo "Creating fcode index on $TABLE"
+  echo "CREATE INDEX ${TABLE}_idx_fcode ON $TABLE (fcode);" | $DBCMD
+
+  echo "Analyzing $TABLE"
+  echo "VACUUM ANALYZE $TABLE" | $DBCMD
 }
 
 

@@ -7,20 +7,25 @@
   "Layer":
   [
     {
-      "name": "waterway",
-      "id": "waterway",
-      "srs": "${EPSG3857}",
-      "Datasource": {
-        ${DBSETTINGS},
-        "table": "(SELECT way, waterway, name, intermittent FROM ${OSM_TABLE_PREFIX}line WHERE waterway IS NOT NULL) AS waterway"
+      "name": "nhdWetland",
+      "id": "nhdWetland",
+      "srs": "${EPSG3857}", "Datasource": {${DBSETTINGS},
+        "table": "(SELECT way, fcode, areasqkm FROM ${NHD_TABLE_PREFIX}_waterbody WHERE fcode IN (46600,46601,46602)) AS w"
       }},
-    {
-      "name": "waterbody",
-      "id": "waterbody",
-      "srs": "${EPSG3857}",
-      "Datasource": {
-        ${DBSETTINGS},
-        "table": "(SELECT way, waterway, \"natural\", water, name, intermittent FROM ${OSM_TABLE_PREFIX}polygon WHERE (waterway = 'riverbank') OR (\"natural\" = 'water')) AS waterbody"
+    { "name": "nhdPerennialStream",
+      "id": "nhdPerennialStream",
+      "srs": "${EPSG3857}", "Datasource": {${DBSETTINGS},
+        "table": "(SELECT way FROM ${NHD_TABLE_PREFIX}_flowline WHERE fcode IN (33400,33600,33601,46000,46006)) AS f"
+      }},
+    { "name": "nhdIntermittentStream",
+      "id": "nhdIntermittentStream",
+      "srs": "${EPSG3857}", "Datasource": {${DBSETTINGS},
+        "table": "(SELECT way FROM ${NHD_TABLE_PREFIX}_flowline WHERE fcode IN (46003,46007)) AS f"
+      }},
+    { "name": "nhdWaterPoly",
+      "id": "nhdPerennialWaterPoly",
+      "srs": "${EPSG3857}", "Datasource": {${DBSETTINGS},
+        "table": "((SELECT way, fcode FROM ${NHD_TABLE_PREFIX}_area WHERE fcode IN (46000,46003,46006)) UNION (SELECT way, fcode FROM ${NHD_TABLE_PREFIX}_waterbody WHERE NOT fcode IN (36100,37800,46600,46601,46602,49300))) AS f"
       }},
     {
       "name": "coastline",
@@ -28,7 +33,7 @@
       "srs": "${EPSG3857}",
       "Datasource": {
         ${DBSETTINGS},
-        "table": "(SELECT way FROM ${OSM_TABLE_PREFIX}line WHERE \"natural\" = 'coastline') AS coastline"
+        "table": "(SELECT way, 0 as fcode FROM ${OSM_TABLE_PREFIX}_line WHERE \"natural\" = 'coastline') AS coastline"
       }},
     {
       "name": "ocean",
@@ -45,7 +50,7 @@
       "srs": "${EPSG3857}",
       "Datasource": {
         ${DBSETTINGS},
-        "table": "(SELECT way, waterway, name FROM ${OSM_TABLE_PREFIX}line WHERE waterway IN ('dam','weir','lock_gate')) AS barriers"
+        "table": "(SELECT way, waterway, name FROM ${OSM_TABLE_PREFIX}_line WHERE waterway IN ('dam','weir','lock_gate')) AS barriers"
       }},
     {
       "name": "hydro_barrier_poly",
@@ -54,7 +59,7 @@
       "srs": "${EPSG3857}",
       "Datasource": {
         ${DBSETTINGS},
-        "table": "(SELECT way, waterway, name FROM ${OSM_TABLE_PREFIX}polygon WHERE waterway IN ('dam','weir','lock_gate')) AS barriers"
+        "table": "(SELECT way, waterway, name FROM ${OSM_TABLE_PREFIX}_polygon WHERE waterway IN ('dam','weir','lock_gate')) AS barriers"
       }}
   ]
 }
