@@ -6,8 +6,7 @@
 // TODO: use pattern!
 
 #nhdWetland [zoom >= 10] {
-	polygon-fill: @waterfill;
-	polygon-opacity: 0.4;
+	 polygon-pattern-file: url(../symbols/marsh.png);
 }
 
 
