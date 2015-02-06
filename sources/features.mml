@@ -2,6 +2,7 @@
   "srs": "${EPSG3857}",
   "Stylesheet": [
     "common.mss",
+    "placenames.mss",
     "points.mss"
   ],
   "Layer":
@@ -108,6 +109,14 @@
       "Datasource": {
         ${DBSETTINGS},
         "table": "(SELECT way FROM ${OSM_TABLE_PREFIX}_point WHERE \"natural\" = 'peak') AS p"
+      }},
+    {
+      "name": "placenames",
+      "id": "placenames",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way, name, place, CASE WHEN place = 'city' THEN 2 WHEN place = 'town' THEN 4 WHEN place = 'suburb' THEN 5 WHEN place = 'village' THEN 6 WHEN place = 'hamlet' THEN 7 WHEN place = 'island' THEN 8 WHEN place = 'locality' THEN 9 ELSE 10 END AS priority FROM ${OSM_TABLE_PREFIX}_point WHERE place IS NOT NULL AND name IS NOT NULL ORDER BY priority) AS places"
       }},
     {
       "name": "peak_labels",
