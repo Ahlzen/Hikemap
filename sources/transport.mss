@@ -185,10 +185,6 @@
 	[bridge='yes'][pass=1] {
 		line-color: @bridgecase;
 		line-cap: butt;
-
-
-
-
 		[zoom>=14][zoom<=15]{ 
 			[highway='motorway'] { line-width: 9; }
 			[highway='trunk'] { line-width: 9; }

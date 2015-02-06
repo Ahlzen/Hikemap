@@ -2,7 +2,7 @@
   "srs": "${EPSG3857}",
   "Stylesheet": [
     "common.mss",
-    "trails.mss"
+    "points.mss"
   ],
   "Layer":
   [
@@ -100,6 +100,22 @@
       "Datasource": {
         ${DBSETTINGS},
         "table": "(SELECT way,highway,bridge,tunnel,oneway, CASE WHEN bridge = 'yes' THEN UNNEST(ARRAY[1,2]) ELSE 2 END AS pass, CASE WHEN highway LIKE '%_link' THEN true ELSE false END AS link FROM ${OSM_TABLE_PREFIX}_line WHERE highway IN ('motorway','trunk','primary','secondary','tertiary','residential','unclassified','service','motorway_link','primary_link','secondary_link','tertiary_link') ORDER BY FLOOR(z_order * 0.1), link DESC, z_order, pass) AS r"
+      }},
+    {
+      "name": "peaks",
+      "id": "peaks",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way FROM ${OSM_TABLE_PREFIX}_point WHERE \"natural\" = 'peak') AS p"
+      }},
+    {
+      "name": "peak_labels",
+      "id": "peak_labels",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way, name, ele AS ele_ft FROM ${OSM_TABLE_PREFIX}_point WHERE \"natural\" = 'peak' AND name IS NOT NULL) AS p"
       }}
   ]
 }

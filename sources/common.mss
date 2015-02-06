@@ -4,6 +4,9 @@
 @wateroutline: #05b;
 @waterfill: #8be;
 
+@peakcolor: #631;
+@peakhalo: rgba(255,255,255,0.5);
+
 /* Highways and misc transportation */
 @transportation: #069;
 @roadcase: black;
