@@ -23,3 +23,6 @@
 @parking: #fff;
 @railroad: #444;
 @lightrail: #444;
+
+/* Trails */
+@trailcolor: #000;

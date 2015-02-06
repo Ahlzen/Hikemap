@@ -2,7 +2,7 @@
   "srs": "${EPSG3857}",
   "Stylesheet": [
     "common.mss",
-    "transport.mss"
+    "trails.mss"
   ],
   "Layer":
   [
