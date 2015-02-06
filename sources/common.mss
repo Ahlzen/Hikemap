@@ -3,3 +3,23 @@
 
 @wateroutline: #05b;
 @waterfill: #8be;
+
+/* Highways and misc transportation */
+@transportation: #069;
+@roadcase: black;
+@bridgecase: black;
+@interstate: #fbb;
+@interstatetunnel: lighten(@interstate, 10%);
+@trunk: #fcb;
+@trunktunnel: lighten(@trunk, 10%);
+@primary: #fdb;
+@primarytunnel: lighten(@primary, 10%);
+@secondary: #feb;
+@secondarytunnel: lighten(@secondary, 10%);
+@tertiary: #ffb;
+@secondarytunnel: lighten(@secondary, 10%);
+@smallroad: white;
+@smallroadtunnel: lighten(@smallroad, 10%);
+@parking: #fff;
+@railroad: #444;
+@lightrail: #444;

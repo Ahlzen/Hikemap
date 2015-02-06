@@ -2,29 +2,37 @@
   "srs": "${EPSG3857}",
   "Stylesheet": [
     "common.mss",
-    "hydro.mss"
+    "transport.mss"
   ],
   "Layer":
   [
     {
       "name": "nhdWetland",
       "id": "nhdWetland",
-      "srs": "${EPSG3857}", "Datasource": {${DBSETTINGS},
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
         "table": "(SELECT way, fcode, areasqkm FROM ${NHD_TABLE_PREFIX}_waterbody WHERE fcode IN (46600,46601,46602)) AS w"
       }},
     { "name": "nhdPerennialStream",
       "id": "nhdPerennialStream",
-      "srs": "${EPSG3857}", "Datasource": {${DBSETTINGS},
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
         "table": "(SELECT way FROM ${NHD_TABLE_PREFIX}_flowline WHERE fcode IN (33400,33600,33601,46000,46006)) AS f"
       }},
     { "name": "nhdIntermittentStream",
       "id": "nhdIntermittentStream",
-      "srs": "${EPSG3857}", "Datasource": {${DBSETTINGS},
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
         "table": "(SELECT way FROM ${NHD_TABLE_PREFIX}_flowline WHERE fcode IN (46003,46007)) AS f"
       }},
     { "name": "nhdWaterPoly",
       "id": "nhdPerennialWaterPoly",
-      "srs": "${EPSG3857}", "Datasource": {${DBSETTINGS},
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
         "table": "((SELECT way, fcode FROM ${NHD_TABLE_PREFIX}_area WHERE fcode IN (46000,46003,46006)) UNION (SELECT way, fcode FROM ${NHD_TABLE_PREFIX}_waterbody WHERE NOT fcode IN (36100,37800,46600,46601,46602,49300))) AS f"
       }},
     {
@@ -60,6 +68,38 @@
       "Datasource": {
         ${DBSETTINGS},
         "table": "(SELECT way, waterway, name FROM ${OSM_TABLE_PREFIX}_polygon WHERE waterway IN ('dam','weir','lock_gate')) AS barriers"
+      }},
+    {
+      "name": "trails",
+      "id": "trails",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way, highway, name, surface, bridge, foot, bicycle, service, tracktype, COALESCE((tags->'trail_visibility'), 'good') AS trail_visibility FROM ${OSM_TABLE_PREFIX}_line WHERE highway IN ('track', 'bridleway', 'footway', 'path', 'pedestrian', 'cycleway')) AS t"
+      }},
+    {
+      "name": "light_rail",
+      "id": "light_rail",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way, railway, name, tunnel, bridge FROM ${OSM_TABLE_PREFIX}_line WHERE railway IN ('light_rail','tram','monorail','subway','funicular','preserved')) AS r"
+      }},
+    {
+      "name": "rail",
+      "id": "rail",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way, railway, name, tunnel, bridge FROM ${OSM_TABLE_PREFIX}_line WHERE railway = 'rail') AS r"
+      }},
+    {
+      "name": "roads",
+      "id": "roads",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way,highway,bridge,tunnel,oneway, CASE WHEN bridge = 'yes' THEN UNNEST(ARRAY[1,2]) ELSE 2 END AS pass, CASE WHEN highway LIKE '%_link' THEN true ELSE false END AS link FROM ${OSM_TABLE_PREFIX}_line WHERE highway IN ('motorway','trunk','primary','secondary','tertiary','residential','unclassified','service','motorway_link','primary_link','secondary_link','tertiary_link') ORDER BY FLOOR(z_order * 0.1), link DESC, z_order, pass) AS r"
       }}
   ]
 }
