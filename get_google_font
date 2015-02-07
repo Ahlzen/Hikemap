@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [[ -z $1 ]] ; then
+	echo "Downloads and installs a font family from google fonts"
+	echo "Syntax: $0 [family name(s)]"
+	echo "Index at: https://googlefontdirectory.googlecode.com/hg/ofl/"
+	exit 1
+fi
+
+if [[ $EUID -ne 0 ]]; then
+   echo "$0 requires root"
+   exit 1
+fi
+
+DESTDIR=/usr/share/fonts/truetype/google-fonts
+mkdir -pv $DESTDIR
+while [[ $1 ]] ; do
+	FAMILYNAME=$1
+	INDEXURL=https://googlefontdirectory.googlecode.com/hg/ofl/$FAMILYNAME
+	FONTNAMES=`wget -q -O - $INDEXURL | egrep -o -E "\".*\.ttf\"" | sed -e 's/^"//' -e 's/"$//'`
+	if [[ -z $FONTNAMES ]] ; then echo "No fonts found for \"$FAMILYNAME\"." ; fi
+	for f in $FONTNAMES ; do
+		echo "Downloading $f..."
+		FONTURL=$INDEXURL/$f
+		wget -q -O $DESTDIR/$f $FONTURL
+	done
+	shift
+done
