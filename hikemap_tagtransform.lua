@@ -69,7 +69,7 @@ function convert_all_to_feet(keyvalues)
 end
 
 
--- Remove useless tags
+-- Remove tags with specific prefixes
 
 skip_key_prefixes = { 'massgis:', 'gnis:' }
 
@@ -86,6 +86,196 @@ function remove_tags_by_prefix(keyvalues)
       end
    end
 end
+
+
+-- Simplify/unify tagging
+
+-- (replaces or adds tag values, so that we can simplify
+-- filter expressions when querying and styling)
+
+substitutes = {
+	-- classify rail
+	{'railway','rail', {rail_class='heavy'}},
+	{'railway','light_rail', {rail_class='light'}},
+	{'railway','subway', {rail_class='light'}},
+	{'railway','funicular', {rail_class='light'}},
+	{'railway','monorail', {rail_class='light'}},
+	{'railway','tram', {rail_class='light'}},
+	{'railway','preserved', {rail_class='light'}},
+	-- classify ski lifts etc
+	{'aerialway','cable_car', {aerialway_class='major'}},
+	{'aerialway','gondola', {aerialway_class='major'}},
+	{'aerialway','goods', {aerialway_class='major'}},
+	{'aerialway','chair_lift', {aerialway_class='minor'}},
+	{'aerialway','drag_lift', {aerialway_class='minor'}},
+	{'aerialway','j-bar', {aerialway_class='minor'}},
+	{'aerialway','magic_carpet', {aerialway_class='minor'}},
+	{'aerialway','mixed_lift', {aerialway_class='minor'}},
+	{'aerialway','platter', {aerialway_class='minor'}},
+	{'aerialway','pylon', {aerialway_class='minor'}},
+	{'aerialway','rope_tow', {aerialway_class='minor'}},
+	{'aerialway','t-bar', {aerialway_class='minor'}},
+	{'aerialway','zip_line', {aerialway_class='minor'}},
+	-- rivers with area
+	{'waterway','riverbank', {natural='water',water='river'}},
+	-- footway/path (no real, consistent, distinction)
+	{'highway','footway', {highway='path'}},
+	-- these are used somewhat interchangeably (at least around here)
+	{'landuse','conservation', {leisure='nature_reserve'}},
+	{'boundary','protected_area', {leisure='nature_reserve'}},
+	-- these are essentially equivalent
+	{'amenty','graveyard', {landuse='cemetery'}}
+}
+
+function subtitute_tags(keyvalues)
+	for i,v in ipairs(substitutes) do
+		srckey = v[1]
+		srcval = v[2]
+		dest = v[3]
+		if (keyvalues[srckey] == srcval) then
+			for dk,dv in pairs(dest) do
+				keyvalues[dk] = dv
+			end
+		end
+	end
+end
+
+
+-- Common abbreviations
+
+	-- NOTE:
+	--  First element must be lowercase
+	--  Order may be important; these are subtituted in-order.
+
+abbreviations = {
+	-- State names go first, since some contain words
+	-- that would otherwise be abbreviated
+	-- Use two-letter when no other suitable abbreviation exists:
+	{'alabama','Alab.'},
+	{'alaska','Alas.'},
+	{'arizona','Ariz.'},
+	{'arkansas','Ark.'},
+	{'california','CA'},
+	{'colorado','Colo.'},
+	{'connecticut','Conn.'},
+	{'delaware','Del.'},
+	{'florida','Fl.'},
+	{'georgia','GA'},
+	{'hawaii','HI'},
+	{'idaho','ID'},
+	{'illinois','Ill.'},
+	{'indiana','Ind.'},
+	{'iowa','IA'},
+	{'kansas','Kan.'},
+	{'kentucky','KY'},
+	{'louisiana','Lou.'},
+	{'maine','ME'},
+	{'maryland','MD'},
+	{'massachusetts','Mass.'},
+	{'michigan','Mich.'},
+	{'minnesota','Minn.'},
+	{'mississippi','Miss.'},
+	{'missouri','MO'},
+	{'montana','Mont.'},
+	{'nebraska','Nebr.'},
+	{'nevada','NV'},
+	{'new hampshire','NH'},
+	{'new jersey','NJ'},
+	{'new mexico','NM'},
+	{'new york','NY'},
+	{'north carolina','NC'},
+	{'north dakota','ND'},
+	{'ohio','OH'},
+	{'oklahoma','Okl.'},
+	{'oregon','Or.'},
+	{'pennsylvania','Penn.'},
+	{'rhode island','RI'},
+	{'south carolina','SC'},
+	{'tennessee','Tenn.'},
+	{'texas','TX'},
+	{'utah','UT'},
+	{'vermont','Ver.'},
+	{'virginia','Virg.'},
+	{'washington','Wash.'},
+	{'west virginia','WV'},
+	{'wisconsin','WI'},
+	{'wyoming','WY'},
+	{'district of columbia','DC'},
+	-- Trail networks etc (add as needed)
+	{'appalachian trail','AT'},
+	{'long trail','LT'},
+	-- Misc
+	{'north','N.'},
+	{'northwest','NW.'},
+	{'northeast','NE.'},
+	{'south','S.'},
+	{'southwest','SW.'},
+	{'southeast','SE.'},
+	{'east','E.'},
+	{'west','W.'},
+	{'railroad','RR'},
+	{'subdivision','Subdiv.'},
+	{'street','St.'},
+	{'road','Rd.'},
+	{'avenue','Ave.'},
+	{'highway','Hwy.'},
+	{'way','Wy.'},
+	{'turnpike','Tpk.'},
+	{'extension','Ext.'},
+	{'circle','Cir.'},
+	{'terrace','Ter.'},
+	{'drive','Dr.'},
+	{'court','Ct.'},
+	{'lane','Ln.'},
+	{'trail','Tr.'},
+	{'mount','Mt.'},
+	{'mountain','Mtn.'},
+	{'river','R.'},
+	{'stream','Str.'},
+	{'branch','Br.'},
+	{'brook','Bk.'},
+	{'swamp','Sw.'},
+	{'pond','Pd.'},
+	{'peak','Pk.'},
+	{'saint','St.'}
+}
+
+function trim(s)
+  return (s:gsub("^%s*(.-)%s*$", "%1"))
+end
+
+function abbreviate_name(keyvalues)
+	name = keyvalues['name']
+	if name ~= nil and keyvalues['short_name'] == nil then
+
+		-- pad so we can easily match on whole words
+		name = ' ' .. keyvalues['name'] .. ' '
+
+		-- Lowercase version for searching
+		lname = string.lower(name)
+
+		-- NOTE: This assumes only one occurence per abbreviation and string
+		-- (can't easily use gsub, since comparison must be case insensitive, so
+		-- we use find instead and substitute manually)
+		for i,k in ipairs(abbreviations) do
+			long = ' ' .. k[1] .. ' '		
+			startp,endp = string.find(lname,long)
+			if startp ~= nil then
+				-- found a match
+				short = ' ' .. k[2] .. ' '
+				name = string.sub(name,0,startp-1) .. short .. string.sub(name,endp+1)
+				lname = string.sub(lname,0,startp-1) .. short .. string.sub(lname,endp+1)
+			end
+		end
+
+		-- save and remove any whitespace padding
+		keyvalues['short_name'] = trim(name)
+	end
+end
+
+
+
+-- Standard functions
 
 polygon_keys = { 'building', 'landuse', 'amenity', 'harbour', 'historic', 'leisure', 
       'man_made', 'military', 'natural', 'office', 'place', 'power',
@@ -146,6 +336,8 @@ function filter_tags_generic(keyvalues, nokeys)
    end
    
    remove_tags_by_prefix(keyvalues)
+   subtitute_tags(keyvalues)
+   abbreviate_name(keyvalues)
    convert_all_to_feet(keyvalues)
 
    for k,v in pairs(keyvalues) do

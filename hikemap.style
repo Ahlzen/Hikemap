@@ -34,6 +34,7 @@ node,way   addr:housenumber    text  linear
 node,way   addr:interpolation  text  linear 
 node,way   admin_level  text         linear
 node,way   aerialway    text         linear
+node,way   aerialway_class text      linear
 node,way   aeroway      text         polygon
 node,way   amenity      text         nocache,polygon
 node,way   area         text         # hard coded support for area=1/yes => polygon is in osm2pgsql
@@ -80,11 +81,13 @@ node,way   power        text         polygon
 node,way   power_source text         linear
 node,way   public_transport text     polygon
 node,way   railway      text         linear
+node,way   rail_class   text         linear  # populated by tag transform
 node,way   ref          text         linear
 node,way   religion     text         nocache
 node,way   route        text         linear
 node,way   service      text         linear
 node,way   shop         text         polygon
+node,way   short_name   text         linear
 node,way   sport        text         polygon
 node,way   surface      text         linear
 node,way   toll         text         linear
