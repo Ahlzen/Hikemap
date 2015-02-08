@@ -5,8 +5,9 @@
 @waterfill: #8be;
 
 //@placenamefont: "Coolvetica Regular";
-@placenamefont: "Droid Sans Regular";
-@placenamefontHz: "Droid Sans Bold";
+//@placenamefont: "Droid Sans Regular";
+//@placenamefontHz: "Droid Sans Bold";
+@placenamefont: "Alegreya Sans Bold";
 @placenamecolor: #000;
 @placenamehalo: rgba(255,255,255,0.5);
 

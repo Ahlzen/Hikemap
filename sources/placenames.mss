@@ -16,9 +16,9 @@
     text-halo-fill: @placenamehalo;
     text-name: "[short_name]";
   }
-  [zoom>=10][zoom<=12][priority<=6] {
+  [zoom>=10][zoom<=12][priority<=8] {
     text-face-name: @placenamefont;
-    text-size: 11;
+    text-size: 10;
     text-dy: 8;
     text-fill: @placenamecolor;
     text-halo-radius: 1.5;
@@ -26,6 +26,7 @@
     text-name: "[short_name]";
     [priority=2] { text-size: 14; }
     [priority=4] { text-size: 12; }
+    [priority=6] { text-size: 11; }
   }
   [zoom>=13][zoom<=13][priority<=8] {
     text-face-name: @placenamefont;
@@ -39,7 +40,7 @@
     [priority=4] { text-size: 16; }
   }
   [zoom>=14] {
-    text-face-name: @placenamefontHz;
+    text-face-name: @placenamefont;
     text-size: 12;
     //text-character-spacing: 1;
     text-dy: 8;
