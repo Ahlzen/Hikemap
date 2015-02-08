@@ -160,7 +160,6 @@ function get_water_polygons {
 # calculate which ones are needed. They are cropped to the relevant
 # region before importing, however.
 function get_nhd {
-  
   echo "Downloading NHD High Resolution"
   mkdir -pv data/nhd/hi
   NHDURLS=`wget -O - ftp://nhdftp.usgs.gov/DataSets/Staged/SubRegions/FileGDB/HighResolution/ | egrep -o -E "ftp://nhdftp.usgs.gov:21/DataSets/Staged/SubRegions/FileGDB/HighResolution/NHDH...._931v220\.zip"`
@@ -183,7 +182,7 @@ function process_nhd {
   done
 }
 
-function import_nhd {
+function import_nhd_table {
   TYPE=$1 ; if [[ -z $1 ]] ; then
     echo "No type (Area, Flowline, Line, Point, Waterbody) specified"
     return 1
@@ -197,12 +196,33 @@ function import_nhd {
    echo $f
    shp2pgsql -s 3857 -a -g way $f $TABLE | $DBCMD
   done
-  # index on fcode (- this is) frequently used to filter features)
-  echo "Creating fcode index on $TABLE"
-  echo "CREATE INDEX ${TABLE}_idx_fcode ON $TABLE (fcode);" | $DBCMD
+}
 
-  echo "Analyzing $TABLE"
-  echo "VACUUM ANALYZE $TABLE" | $DBCMD
+function nhd_postprocess {
+  echo "Creating fcode indexes..."
+  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_waterbody_idx_wetlands ON $TABLE USING gist(way) WHERE fcode IN (46600,46601,46602);" 
+  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_flowline_idx_perennialStream ON $TABLE USING gist(way) WHERE fcode IN (33400,33600,33601,46000,46006);" 
+  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_flowline_idx_intermittentStream ON $TABLE USING gist(way) WHERE fcode IN (46003,46007);" 
+  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_area_idx_waterpoly ON $TABLE USING gist(way) WHERE fcode IN (46000,46003,46006);" 
+  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_waterbody_idx_waterpoly ON $TABLE USING gist(way) WHERE fcode NOT IN (36100,37800,46600,46601,46602,49300);" 
+
+  echo "Analyzing..."
+  echo "VACUUM ANALYZE ${NHD_TABLE_PREFIX}_area" | $DBCMD
+  echo "VACUUM ANALYZE ${NHD_TABLE_PREFIX}_flowline" | $DBCMD
+  echo "VACUUM ANALYZE ${NHD_TABLE_PREFIX}_line" | $DBCMD
+  echo "VACUUM ANALYZE ${NHD_TABLE_PREFIX}_point" | $DBCMD
+  echo "VACUUM ANALYZE ${NHD_TABLE_PREFIX}_waterbody" | $DBCMD
+}
+
+function nhd_all {
+  get_nhd
+  process_nhd
+  import_nhd_table Area
+  import_nhd_table Flowline
+  import_nhd_table Line
+  import_nhd_table Point
+  import_nhd_table Waterbody
+  nhd_postprocess
 }
 
 
@@ -215,4 +235,5 @@ function get_all_data {
   generate_hillshade
   generate_contours
   get_water_polygons
+  nhd_all
 }
