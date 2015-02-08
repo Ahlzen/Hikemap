@@ -36,3 +36,4 @@
 
 /* Trails */
 @trailcolor: #000;
+@trailbg: rgba(255,255,255,0.0);
