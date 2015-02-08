@@ -13,7 +13,7 @@ export DB_NAME="gis"
 export CONTOURS_TABLE="contours50ft"
 
 # Table prefix for OSM data
-export OSM_TABLE_PREFIX="planet_osm"
+export OSM_TABLE_PREFIX="osm_ne"
 
 # Table prefix for NHD data
 export NHD_TABLE_PREFIX="hikemap_nhd"
