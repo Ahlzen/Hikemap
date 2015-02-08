@@ -1,32 +1,35 @@
-//// Railroads etc
+//// Heavy rail
 
-#rail [zoom>=12][zoom<=13] {
+#rail [rail_class='heavy'][zoom>=12][zoom<=13] {
   line-width: 0.9;
   line-color: @railroad;
   ::ties { line-width: 3.5; line-dasharray: 0.9,12; line-color: @railroad; }
 }
-#rail [zoom>=14][zoom<=15] {
+#rail [rail_class='heavy'][zoom>=14][zoom<=15] {
   line-width: 1.3;
   line-color: @railroad;
   ::ties { line-width: 6; line-dasharray: 1.3,20; line-color: @railroad; }
 }
-#rail [zoom>=16] {
+#rail [rail_class='heavy'][zoom>=16] {
   line-width: 2.0;
   line-color: @railroad;
   ::ties { line-width: 8; line-dasharray: 2.0,30; line-color: @railroad; }
 }
 
-#light_rail [zoom>=12][zoom<=13] {
+
+//// Light rail etc
+
+#rail [rail_class='light'][zoom>=12][zoom<=13] {
   line-width: 0.8;
   line-color: @lightrail;
   ::ties { line-width: 3; line-dasharray: 0.8,9; line-color: @lightrail; }
 }
-#light_rail [zoom>=14][zoom<=15] {
+#rail [rail_class='light'][zoom>=14][zoom<=15] {
   line-width: 1.1;
   line-color: @lightrail;
   ::ties { line-width: 4; line-dasharray: 1.2,12; line-color: @lightrail; }
 }
-#light_rail [zoom>=16] {
+#rail [rail_class='light'][zoom>=16] {
   line-width: 1.5;
   line-color: @lightrail;
   ::ties { line-width: 6; line-dasharray: 1.5,15; line-color: @lightrail; }

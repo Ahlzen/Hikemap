@@ -8,7 +8,7 @@
 }
 
 #peak_labels [zoom>=12] {
-   text-name: "[name]";
+   text-name: "[short_name]";
    text-dy: 8;
    text-face-name: "Gentium Basic Bold Italic";
    text-size: 11;
@@ -16,6 +16,7 @@
    text-halo-fill: @peakhalo;
    text-halo-radius: 1.5;
    [zoom >= 14] {
+      text-name: "[name]";
       text-size: 13;
       ::elevation [ele_ft!=""] {
          text-name: [ele_ft] + ' ft';

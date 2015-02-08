@@ -14,7 +14,7 @@
     text-fill: darken(@placenamecolor, 50%);
     text-halo-radius: 1.5;
     text-halo-fill: @placenamehalo;
-    text-name: "[name]";
+    text-name: "[short_name]";
   }
   [zoom>=10][zoom<=12][priority<=6] {
     text-face-name: @placenamefont;
@@ -23,7 +23,7 @@
     text-fill: @placenamecolor;
     text-halo-radius: 1.5;
     text-halo-fill: @placenamehalo;
-    text-name: "[name]";
+    text-name: "[short_name]";
     [priority=2] { text-size: 14; }
     [priority=4] { text-size: 12; }
   }

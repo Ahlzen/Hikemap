@@ -2,6 +2,9 @@
   "srs": "${EPSG3857}",
   "Stylesheet": [
     "common.mss",
+    "hydro.mss",
+    "transport.mss",
+    "trails.mss",
     "placenames.mss",
     "points.mss"
   ],
@@ -76,15 +79,7 @@
       "srs": "${EPSG3857}",
       "Datasource": {
         ${DBSETTINGS},
-        "table": "(SELECT way, highway, name, surface, bridge, foot, bicycle, service, tracktype, COALESCE((tags->'trail_visibility'), 'good') AS trail_visibility FROM ${OSM_TABLE_PREFIX}_line WHERE highway IN ('track', 'bridleway', 'footway', 'path', 'pedestrian', 'cycleway')) AS t"
-      }},
-    {
-      "name": "light_rail",
-      "id": "light_rail",
-      "srs": "${EPSG3857}",
-      "Datasource": {
-        ${DBSETTINGS},
-        "table": "(SELECT way, railway, name, tunnel, bridge FROM ${OSM_TABLE_PREFIX}_line WHERE railway IN ('light_rail','tram','monorail','subway','funicular','preserved')) AS r"
+        "table": "(SELECT way, highway, name, surface, bridge, foot, bicycle, service, tracktype, COALESCE(trail_visibility, 'good') AS trail_visibility FROM ${OSM_TABLE_PREFIX}_line WHERE highway IN ('track', 'bridleway', 'footway', 'path', 'pedestrian', 'cycleway')) AS t"
       }},
     {
       "name": "rail",
@@ -92,7 +87,7 @@
       "srs": "${EPSG3857}",
       "Datasource": {
         ${DBSETTINGS},
-        "table": "(SELECT way, railway, name, tunnel, bridge FROM ${OSM_TABLE_PREFIX}_line WHERE railway = 'rail') AS r"
+        "table": "(SELECT way, railway, rail_class, name, tunnel, bridge FROM ${OSM_TABLE_PREFIX}_line WHERE railway IS NOT NULL) AS r"
       }},
     {
       "name": "roads",
@@ -116,7 +111,7 @@
       "srs": "${EPSG3857}",
       "Datasource": {
         ${DBSETTINGS},
-        "table": "(SELECT way, name, place, CASE WHEN place = 'city' THEN 2 WHEN place = 'town' THEN 4 WHEN place = 'suburb' THEN 5 WHEN place = 'village' THEN 6 WHEN place = 'hamlet' THEN 7 WHEN place = 'island' THEN 8 WHEN place = 'locality' THEN 9 ELSE 10 END AS priority FROM ${OSM_TABLE_PREFIX}_point WHERE place IS NOT NULL AND name IS NOT NULL ORDER BY priority) AS places"
+        "table": "(SELECT way, name, short_name, place, CASE WHEN place = 'city' THEN 2 WHEN place = 'town' THEN 4 WHEN place = 'suburb' THEN 5 WHEN place = 'village' THEN 6 WHEN place = 'hamlet' THEN 7 WHEN place = 'island' THEN 8 WHEN place = 'locality' THEN 9 ELSE 10 END AS priority FROM ${OSM_TABLE_PREFIX}_point WHERE place IS NOT NULL AND name IS NOT NULL ORDER BY priority) AS places"
       }},
     {
       "name": "peak_labels",
@@ -124,7 +119,7 @@
       "srs": "${EPSG3857}",
       "Datasource": {
         ${DBSETTINGS},
-        "table": "(SELECT way, name, ele AS ele_ft FROM ${OSM_TABLE_PREFIX}_point WHERE \"natural\" = 'peak' AND name IS NOT NULL) AS p"
+        "table": "(SELECT way, name, short_name, ele_ft FROM ${OSM_TABLE_PREFIX}_point WHERE \"natural\" = 'peak' AND name IS NOT NULL) AS p"
       }}
   ]
 }
