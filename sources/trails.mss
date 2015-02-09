@@ -25,7 +25,7 @@
 
   //::fill {
     line-color: @trailcolor;
-    line-width: 1.3;
+    line-width: 1.2;
     [highway='bridleway'],
     [highway='track'] {
       line-dasharray: 8, 2;
@@ -45,16 +45,24 @@
   
   [highway='track'],
   [highway='bridleway'] {
-    [bridge='yes'] { line-width: 6.5; line-color: fadeout(black, 30%); }
+    //[bridge='yes'] { line-width: 6.5; line-color: fadeout(black, 30%); }
     //::background { line-width: 4.5; line-color: @trailbg; }
     //::fill {
-      line-width: 1.8;
-      line-dasharray: 12, 2;
-      [tracktype='grade5'] { line-dasharray: 7, 2; }
-      [tracktype='grade4'] { line-dasharray: 9, 2; }
-      [tracktype='grade3'] { line-dasharray: 11, 2; }
-      [tracktype='grade2'] { line-dasharray: 13.5, 2; }
-      [tracktype='grade1'] { line-dasharray: 15, 2; }
+    [bridge='yes'] {
+        line-width: 5.0;
+        line-color: black;
+        ::midfill {
+          line-width: 3.5;
+          line-color: white;
+        }
+      }
+    line-width: 1.5;
+    line-dasharray: 12, 2;
+    [tracktype='grade5'] { line-dasharray: 7, 2; }
+    [tracktype='grade4'] { line-dasharray: 9, 2; }
+    [tracktype='grade3'] { line-dasharray: 11, 2; }
+    [tracktype='grade2'] { line-dasharray: 13.5, 2; }
+    [tracktype='grade1'] { line-dasharray: 15, 2; }
     //}
   }
   
@@ -67,15 +75,15 @@
     [trail_visibility='horrible']
     {
       [bridge='yes'] {
-        line-width: 4.9;
+        line-width: 4.7;
         line-color: black;
         ::midfill {
-          line-width: 3.4;
+          line-width: 3.2;
           line-color: white;
         }
       }
       ::fill {
-        line-width: 1.4;
+        line-width: 1.2;
         line-dasharray: 5, 2;
       }
     }
@@ -86,15 +94,15 @@
     [trail_visibility='excellent']
     {
       [bridge='yes'] {
-        line-width: 5.3;
+        line-width: 5.0;
         line-color: black;
         ::midfill {
-          line-width: 3.8;
+          line-width: 3.5;
           line-color: white;
         }
       }
       ::fill {
-        line-width: 1.8;
+        line-width: 1.5;
         line-dasharray: 5, 2;
       }
     }
@@ -102,13 +110,13 @@
   
   [highway='cycleway'] {
     [bridge='yes'] {
-      line-width: 5.3;
+      line-width: 5.0;
       line-color: black;
       ::midfill {
-        line-width: 3.8;
+        line-width: 3.5;
         line-color: white;
       }
     }
-    ::fill { line-width: 1.8; }
+    ::fill { line-width: 1.5; }
   }
 }

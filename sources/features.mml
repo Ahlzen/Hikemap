@@ -120,6 +120,22 @@
       "Datasource": {
         ${DBSETTINGS},
         "table": "(SELECT way, name, short_name, ele_ft FROM ${OSM_TABLE_PREFIX}_point WHERE \"natural\" = 'peak' AND name IS NOT NULL) AS p"
+      }},
+    {
+      "name": "prioritypoints",
+      "id": "prioritypoints",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "((SELECT way,tourism,amenity,aeroway,landuse,man_made,name,short_name FROM ${OSM_TABLE_PREFIX}_point WHERE tourism IN ('alpine_hut','viewpoint','picnic_site','camp_site','campground','information','map') OR amenity IN ('shelter','toilets','restrooms','parking','drinking_water') OR aeroway IN ('aerodrome') OR landuse IN ('quarry') OR man_made IN ('mineshaft','adit')) UNION (SELECT way,tourism,amenity,aeroway,landuse,man_made,name,short_name FROM ${OSM_TABLE_PREFIX}_polygon WHERE tourism IN ('alpine_hut','viewpoint','picnic_site','camp_site','campground','information','map') OR amenity IN ('shelter','toilets','restrooms','parking','drinking_water') OR aeroway IN ('aerodrome') OR landuse IN ('quarry') OR man_made IN ('mineshaft','adit'))) AS i"
+      }},
+    {
+      "name": "miscpoints",
+      "id": "miscpoints",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way,name,man_made,barrier FROM ${OSM_TABLE_PREFIX}_point WHERE man_made='tower' OR barrier='gate') AS p"
       }}
   ]
 }
