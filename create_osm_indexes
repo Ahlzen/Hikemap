@@ -1,0 +1,21 @@
+#!/bin/bash
+
+. config
+
+# Railroads
+echo "CREATE INDEX idx_line_rail ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE (railway IS NOT NULL);" | $DBCMD
+
+# Roads
+echo "CREATE INDEX idx_line_roads ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE highway IN ('motorway','trunk','primary','secondary','tertiary','residential','unclassified','service','motorway_link','primary_link','secondary_link','tertiary_link');" | $DBCMD
+
+# Trails
+echo "CREATE INDEX idx_line_trails ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE highway IN ('track', 'bridleway', 'footway', 'path', 'pedestrian', 'cycleway');" | $DBCMD
+
+# Coastline
+echo "CREATE INDEX idx_line_coastline ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE \"natural\" = 'coastline'" | $DBCMD
+
+# Places
+echo "CREATE INDEX idx_point_places ON ${OSM_TABLE_PREFIX}_point USING gist(way) WHERE place IS NOT NULL AND name IS NOT NULL;" | $DBCMD
+
+# Natural
+echo "CREATE INDEX idx_point_peaks ON ${OSM_TABLE_PREFIX}_point USING gist(way) WHERE \"natural\" = 'peak'" | $DBCMD
