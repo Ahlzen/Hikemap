@@ -30,8 +30,11 @@
 @smallroad: white;
 @smallroadtunnel: lighten(@smallroad, 10%);
 @parking: #fff;
+
+/* Highways and misc transportation */
 @railroad: #444;
 @lightrail: #444;
+@aerialway: #666;
 
 /* Trails */
 @trailcolor: #000;

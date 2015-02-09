@@ -221,3 +221,39 @@
 	}
 }
 
+
+//// Ski lifts etc
+
+#aerialway [aerialway_class='major'][zoom>=12] {
+	line-color: @aerialway;	
+	marker-placement: line;
+	marker-line-width: 0;
+	marker-fill: @aerialway;
+	line-width: 1.2;
+	marker-width: 3.0;
+	marker-height: 3.0;
+	marker-spacing: 15;
+	[zoom >= 14] {
+		line-width: 1.6;
+		marker-width: 4.0;
+		marker-height: 4.0;
+		marker-spacing: 20;
+	}
+}
+
+#aerialway [aerialway_class='minor'][zoom>=12] {
+	line-color: @aerialway;	
+	marker-placement: line;
+	marker-line-width: 0;
+	marker-fill: @aerialway;
+	line-width: 0.8;
+	marker-width: 2.0;
+	marker-height: 2.0;
+	marker-spacing: 10;
+	[zoom >= 14] {
+		line-width: 1.2;
+		marker-width: 3.0;
+		marker-height: 3.0;
+		marker-spacing: 15;
+	}
+}
