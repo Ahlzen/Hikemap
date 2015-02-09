@@ -35,7 +35,8 @@ TODO
 
 Hikemap uses a few high-quality open font families that are available from [Google Fonts](https://www.google.com/fonts). I have included a script that downloads and installs font families directly from Google Fonts:
 
-```sudo get_google_font alegreya alegreyasans alegreyasanssc
+```
+sudo get_google_font alegreya alegreyasans alegreyasanssc
 ```
 
 
@@ -59,7 +60,8 @@ Hikemap uses the following data sources:
 
 A script, `get_data`, contains functions to download and pre-process this data. You can download and process all required data (except OSM) like so:
 
-```source get_data
+```
+source get_data
 get_all_data
 ```
 
@@ -74,7 +76,8 @@ There is also a script that adds a few indexes to speed up certain queries.
 
 To import an OSM extract, you would do something like:
 
-```. config
+```
+. config
 osm2pgsql -c -s -p $OSM_TABLE_PREFIX --drop -S hikemap.style --keep-coastlines --tag-transform-script hikemap_tagtransform.lua data/osm/us-northeast-latest.osm.pbf
 ./create_osm_indexes
 ```
@@ -89,7 +92,8 @@ The `process_sources` script builds the mapnik XML style files and a tilestache.
 
 TileStache comes with a simple server that you can use to test the supplied tilestache.conf:
 
-```tilestache-server.py --config=processed/tilestache.conf
+```
+tilestache-server.py --config=processed/tilestache.conf
 ```
 
 The [tilestache documentation](http://tilestache.org/doc/) describes how to serve tiles using web servers more suitable for production.
