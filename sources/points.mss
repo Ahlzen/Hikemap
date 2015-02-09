@@ -71,15 +71,15 @@
       text-halo-radius: 1.5;
       text-wrap-width: 60;
       text-name: "[short_name]";
-      text-size: 10;
+      text-size: 11;
       text-placement-type: simple;
-      text-placements: "S,N,10";
+      text-placements: "S,N,11,10";
       text-dy: 12;
       [zoom >= 15] {
          text-name: "[name]";
-         text-size: 12;
+         text-size: 13;
          text-wrap-width: 80;
-         text-placements: "S,N,12,11,10";
+         text-placements: "S,N,13,12,11,10";
       }
    }
 }
