@@ -29,6 +29,48 @@
 	[zoom >= 16] { line-width: 1.5; }
 }
 
+#nhdMajorStreamLabel [zoom >= 12] {
+	text-spacing: 200;
+	text-label-position-tolerance: 10;
+	text-min-distance: 30;
+
+	text-name: "[gnis_name]";
+	text-size: 12;
+	text-face-name: @waterlabelfont;
+	text-fill: @waterlabelcolor;
+	//text-character-spacing: 1;
+	//text-max-char-angle-delta: 30;
+	text-placement: line;
+	//text-dy: 7;
+	text-halo-fill: rgba(255,255,255,0.4);
+    text-halo-radius: 1.5;
+	[zoom >= 15] {
+		text-size: 14;
+		//text-dy: 8;
+	}
+}
+
+#nhdStreamLabel [zoom >= 14] {
+	text-spacing: 200;
+	text-label-position-tolerance: 10;
+	text-min-distance: 30;
+
+	text-name: "[gnis_name]";
+	text-size: 11;
+	text-face-name: @waterlabelfont;
+	text-fill: @waterlabelcolor;
+	//text-character-spacing: 1;
+	//text-max-char-angle-delta: 30;
+	text-placement: line;
+	text-dy: 7;
+	//text-halo-fill: @waterlabelhalo;
+    //text-halo-radius: 1.5;
+	[zoom >= 15] {
+		text-size: 13;
+		text-dy: 8;
+	}
+}
+
 
 ////// Water bodies (lakes, ponds, wide rivers etc) and ocean
 

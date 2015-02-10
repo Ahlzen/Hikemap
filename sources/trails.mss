@@ -120,3 +120,22 @@
     ::fill { line-width: 1.5; }
   }
 }
+
+
+#traillabels [zoom >= 13] {
+  text-name: "[short_name]";
+  text-size: 10;
+  text-face-name: @traillabelfont;
+  text-character-spacing: 1;
+  text-max-char-angle-delta: 30;
+  //text-transform: uppercase;
+  text-placement: line;
+  //text-halo-fill: rgb(255,255,255,0.4);
+  //text-halo-radius: 1;
+  text-dy: 7;
+  [zoom >= 15] {
+    text-name: "[name]";
+    text-size: 12;
+    text-dy: 8;
+  }
+}

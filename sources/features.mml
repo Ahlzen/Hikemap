@@ -2,11 +2,7 @@
   "srs": "${EPSG3857}",
   "Stylesheet": [
     "common.mss",
-    "hydro.mss",
-    "transport.mss",
-    "trails.mss",
-    "placenames.mss",
-    "points.mss"
+    "hydro.mss"
   ],
   "Layer":
   [
@@ -138,12 +134,46 @@
         "table": "((SELECT way,tourism,amenity,aeroway,landuse,man_made,name,short_name FROM ${OSM_TABLE_PREFIX}_point WHERE tourism IN ('alpine_hut','viewpoint','picnic_site','camp_site','campground','information','map') OR amenity IN ('shelter','toilets','restrooms','parking','drinking_water') OR aeroway IN ('aerodrome') OR landuse IN ('quarry') OR man_made IN ('mineshaft','adit')) UNION (SELECT way,tourism,amenity,aeroway,landuse,man_made,name,short_name FROM ${OSM_TABLE_PREFIX}_polygon WHERE tourism IN ('alpine_hut','viewpoint','picnic_site','camp_site','campground','information','map') OR amenity IN ('shelter','toilets','restrooms','parking','drinking_water') OR aeroway IN ('aerodrome') OR landuse IN ('quarry') OR man_made IN ('mineshaft','adit'))) AS i"
       }},
     {
+      "name": "traillabels",
+      "id": "traillabels",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way, highway, name, short_name FROM ${OSM_TABLE_PREFIX}_line WHERE highway IN ('track', 'bridleway', 'footway', 'path', 'pedestrian', 'cycleway')) AS t"
+      }},
+    {
       "name": "miscpoints",
       "id": "miscpoints",
       "srs": "${EPSG3857}",
       "Datasource": {
         ${DBSETTINGS},
         "table": "(SELECT way,name,man_made,barrier FROM ${OSM_TABLE_PREFIX}_point WHERE man_made='tower' OR barrier='gate') AS p"
+      }},
+
+
+    {
+      "name": "nhdAreaLabel",
+      "id": "nhdAreaLabel",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "((SELECT way,fcode,areasqkm,gnis_name FROM ${NHD_TABLE_PREFIX}_area WHERE fcode IN (46000,46003,46006)) UNION (SELECT way,fcode,areasqkm,gnis_name FROM ${NHD_TABLE_PREFIX}_waterbody WHERE NOT fcode IN (36100,37800,46600,46601,46602,49300))) AS w"
+      }},
+    {
+      "name": "nhdMajorStreamLabel",
+      "id": "nhdMajorStreamLabel",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way,fcode,lengthkm,gnis_name FROM ${NHD_TABLE_PREFIX}_flowline WHERE fcode IN (55800)) AS f"
+      }},
+    {
+      "name": "nhdStreamLabel",
+      "id": "nhdStreamLabel",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way,fcode,lengthkm,gnis_name FROM ${NHD_TABLE_PREFIX}_flowline WHERE fcode IN (33400,33600,33601,46000,46006,55800)) AS f"
       }}
   ]
 }

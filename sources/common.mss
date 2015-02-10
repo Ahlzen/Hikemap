@@ -3,6 +3,9 @@
 
 @wateroutline: #05b;
 @waterfill: #8be;
+@waterlabelfont: "Alegreya Italic";
+@waterlabelcolor: darken(@wateroutline, 10%);
+@waterlabelhalo: rgba(255,255,255,0.5);
 
 @placenamefont: "Alegreya Sans Bold";
 @placenamecolor: #000;
@@ -39,3 +42,4 @@
 /* Trails */
 @trailcolor: #000;
 @trailbg: rgba(255,255,255,0.0);
+@traillabelfont: "Alegreya Sans SC Medium";
