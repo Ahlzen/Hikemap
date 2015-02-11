@@ -2,7 +2,11 @@
   "srs": "${EPSG3857}",
   "Stylesheet": [
     "common.mss",
-    "hydro.mss"
+    "hydro.mss",
+    "transport.mss",
+    "trails.mss",
+    "placenames.mss",
+    "points.mss"
   ],
   "Layer":
   [
@@ -165,7 +169,7 @@
       "srs": "${EPSG3857}",
       "Datasource": {
         ${DBSETTINGS},
-        "table": "(SELECT way,fcode,lengthkm,gnis_name FROM ${NHD_TABLE_PREFIX}_flowline WHERE fcode IN (55800)) AS f"
+        "table": "(SELECT way,fcode,lengthkm,gnis_name FROM ${NHD_TABLE_PREFIX}_flowline WHERE fcode = 55800) AS f"
       }},
     {
       "name": "nhdStreamLabel",
@@ -173,7 +177,7 @@
       "srs": "${EPSG3857}",
       "Datasource": {
         ${DBSETTINGS},
-        "table": "(SELECT way,fcode,lengthkm,gnis_name FROM ${NHD_TABLE_PREFIX}_flowline WHERE fcode IN (33400,33600,33601,46000,46006,55800)) AS f"
+        "table": "(SELECT way,fcode,lengthkm,gnis_name FROM ${NHD_TABLE_PREFIX}_flowline WHERE fcode IN (33400,33600,33601,46000,46006)) AS f"
       }}
   ]
 }

@@ -3,7 +3,8 @@
 
 @wateroutline: #05b;
 @waterfill: #8be;
-@waterlabelfont: "Alegreya Italic";
+@streamlabelfont: "Gentium Basic Italic";
+@waterbodylabelfont: "Gentium Basic Bold Italic";
 @waterlabelcolor: darken(@wateroutline, 10%);
 @waterlabelhalo: rgba(255,255,255,0.5);
 

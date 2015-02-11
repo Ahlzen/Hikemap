@@ -200,11 +200,12 @@ function import_nhd_table {
 
 function nhd_postprocess {
   echo "Creating fcode indexes..."
-  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_waterbody_idx_wetlands ON $TABLE USING gist(way) WHERE fcode IN (46600,46601,46602);" 
-  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_flowline_idx_perennialStream ON $TABLE USING gist(way) WHERE fcode IN (33400,33600,33601,46000,46006);" 
-  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_flowline_idx_intermittentStream ON $TABLE USING gist(way) WHERE fcode IN (46003,46007);" 
-  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_area_idx_waterpoly ON $TABLE USING gist(way) WHERE fcode IN (46000,46003,46006);" 
-  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_waterbody_idx_waterpoly ON $TABLE USING gist(way) WHERE fcode NOT IN (36100,37800,46600,46601,46602,49300);" 
+  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_waterbody_idx_wetlands ON ${NHD_TABLE_PREFIX}_waterbody USING gist(way) WHERE fcode IN (46600,46601,46602);" | $DBCMD
+  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_flowline_idx_perennialStream ON ${NHD_TABLE_PREFIX}_flowline USING gist(way) WHERE fcode IN (33400,33600,33601,46000,46006);" | $DBCMD
+  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_flowline_idx_intermittentStream ON ${NHD_TABLE_PREFIX}_flowline USING gist(way) WHERE fcode IN (46003,46007);" | $DBCMD
+  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_area_idx_waterpoly ON ${NHD_TABLE_PREFIX}_area USING gist(way) WHERE fcode IN (46000,46003,46006);" | $DBCMD
+  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_waterbody_idx_waterpoly ON ${NHD_TABLE_PREFIX}_waterbody USING gist(way) WHERE fcode NOT IN (36100,37800,46600,46601,46602,49300);" | $DBCMD
+  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_flowline_idx_rivercenterline ON ${NHD_TABLE_PREFIX}_flowline USING gist(way) WHERE fcode = 55800;" | $DBCMD
 
   echo "Analyzing..."
   echo "VACUUM ANALYZE ${NHD_TABLE_PREFIX}_area" | $DBCMD

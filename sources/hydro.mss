@@ -33,40 +33,32 @@
 	text-spacing: 200;
 	text-label-position-tolerance: 10;
 	text-min-distance: 30;
-
+	text-max-char-angle-delta: 40;
+	text-character-spacing: 3;
 	text-name: "[gnis_name]";
 	text-size: 12;
-	text-face-name: @waterlabelfont;
+	text-face-name: @waterbodylabelfont;
 	text-fill: @waterlabelcolor;
-	//text-character-spacing: 1;
-	//text-max-char-angle-delta: 30;
 	text-placement: line;
-	//text-dy: 7;
 	text-halo-fill: rgba(255,255,255,0.4);
     text-halo-radius: 1.5;
-	[zoom >= 15] {
-		text-size: 14;
-		//text-dy: 8;
-	}
+    [zoom >= 14] { text-size: 14; }
+	[zoom >= 15] { text-size: 15; }
 }
 
 #nhdStreamLabel [zoom >= 14] {
 	text-spacing: 200;
 	text-label-position-tolerance: 10;
 	text-min-distance: 30;
-
 	text-name: "[gnis_name]";
-	text-size: 11;
-	text-face-name: @waterlabelfont;
+	text-size: 12;
+	text-character-spacing: 1;
+	text-face-name: @streamlabelfont;
 	text-fill: @waterlabelcolor;
-	//text-character-spacing: 1;
-	//text-max-char-angle-delta: 30;
 	text-placement: line;
 	text-dy: 7;
-	//text-halo-fill: @waterlabelhalo;
-    //text-halo-radius: 1.5;
 	[zoom >= 15] {
-		text-size: 13;
+		text-size: 14;
 		text-dy: 8;
 	}
 }
@@ -93,22 +85,38 @@
 	[zoom >= 16] { line-width: 2.5; }
 }
 
-#ocean,
 #nhdWaterPoly::fill [zoom >= 8] {
 	polygon-fill: @waterfill;
+}
+
+#ocean {
+	polygon-fill: @waterfill;
+}
+
+#nhdAreaLabel [zoom >= 9][areasqkm >= 3],
+#nhdAreaLabel [zoom >= 11][areasqkm >= 0.3],
+#nhdAreaLabel [zoom >= 13][areasqkm >= 0.03],
+#nhdAreaLabel [zoom >= 15][areasqkm >= 0.001] {
+	text-spacing: 200;
+	text-label-position-tolerance: 30;
+	text-wrap-width: 40;
+	text-name: "[gnis_name]";
+	text-face-name: @waterbodylabelfont;
+	text-fill: @waterlabelcolor;
+	text-halo-fill: rgba(255,255,255,0.4);
+    text-halo-radius: 1.5;
+    text-size: 12;
+    [zoom >= 14] { text-size: 14; }
 }
 
 
 ////// Hydrological barriers: Dams, weirs, etc
 
-// TODO: Change to z12+
-
-.hydro_barrier [zoom >= 10] {
+.hydro_barrier [zoom >= 12] {
 	line-color: black;
-	line-width: 1.5;
-	
+	line-width: 1.5;	
 }
 
-.hydro_barrier_filled::fill [zoom >= 10] {
+.hydro_barrier_filled::fill [zoom >= 12] {
 	polygon-fill: #666;
 }
