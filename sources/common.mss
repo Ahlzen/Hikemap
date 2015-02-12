@@ -46,3 +46,11 @@
 @trailcolor: #000;
 @trailbg: rgba(255,255,255,0.0);
 @traillabelfont: "Alegreya Sans SC Medium";
+
+/* Borders */
+@stateLabelFont: "DejaVu Sans Condensed Bold";
+@stateBorderFont: "Alegreya Sans SC Bold";
+
+@parkcolor: #141;
+@parkfont: "Alegreya Sans SC Bold";
+@parkhalo: rgba(255,255,255,0.5);

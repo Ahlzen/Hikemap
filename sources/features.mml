@@ -1,8 +1,13 @@
 {
   "srs": "${EPSG3857}",
   "Stylesheet": [
-    "common.mss",
-    "transport.mss"
+"common.mss",
+    "hydro.mss",
+    "transport.mss",
+    "trails.mss",
+    "placenames.mss",
+    "points.mss",
+    "borders.mss"
   ],
   "Layer":
   [
@@ -50,6 +55,22 @@
       "Datasource": {
         "type": "shape",
         "file": "../data/osm/water_polygons.shp"
+      }},
+    {
+      "name": "parks",
+      "id": "parks",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way, way_area FROM ${OSM_TABLE_PREFIX}_polygon WHERE landuse IN ('forest','vineyard','conservation','recreation_ground','village_green','cemetery') OR leisure IN ('nature_reserve','park','common','recreation_ground','playground','garden','golf_course')) AS p"
+      }},
+    {
+      "name": "stateBorderLines",
+      "id": "stateBorderLines",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way FROM ${OSM_TABLE_PREFIX}_polygon WHERE \"boundary\" = 'administrative' AND admin_level='4') AS s"
       }},
     {
       "name": "hydro_barrier_line",
@@ -173,6 +194,15 @@
         ${DBSETTINGS},
         "table": "(SELECT way,fcode,lengthkm,gnis_name FROM ${NHD_TABLE_PREFIX}_flowline WHERE fcode IN (33400,33600,33601,46000,46006)) AS f"
       }},
+    {
+      "name": "parkLabels",
+      "id": "parkLabels",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way, name, way_area, leisure, landuse, \"natural\" FROM ${OSM_TABLE_PREFIX}_polygon WHERE landuse IN ('forest','vineyard','conservation','recreation_ground','village_green','cemetery') OR leisure IN ('nature_reserve','park','common','recreation_ground','playground','garden','golf course')) AS p"
+      }
+    },
 
     {
       "name": "transportShieldsAndLabelsHizoom",
@@ -181,6 +211,15 @@
       "Datasource": {
         ${DBSETTINGS},
         "table": "(SELECT way,highway,name,substring(ref from '^I[ -]([0-9A]+)') AS interstate,substring(ref from '^US[ -]([0-9A]+)') AS usroute FROM ${OSM_TABLE_PREFIX}_line WHERE highway IN ('motorway','trunk','primary','secondary','tertiary','residential','unclassified') OR railway IN ('rail','light_rail','preserved','subway','tram','funicular','monorail') ORDER BY z_order) AS r"
+      }},
+
+    {
+      "name": "stateLabels",
+      "id": "stateLabels",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way,name,ref,way_area FROM ${OSM_TABLE_PREFIX}_polygon WHERE \"boundary\" = 'administrative' AND admin_level='4') AS s"
       }}
   ]
 }
