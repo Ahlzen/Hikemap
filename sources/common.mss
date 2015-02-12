@@ -17,7 +17,7 @@
 @peakcolor: #631;
 @peakhalo: rgba(255,255,255,0.5);
 
-/* Highways and misc transportation */
+/* Roads */
 @transportation: #069;
 @roadcase: black;
 @bridgecase: black;
@@ -34,8 +34,10 @@
 @smallroad: white;
 @smallroadtunnel: lighten(@smallroad, 10%);
 @parking: #fff;
+@roadlabelfont: "Alegreya Sans Medium";
+@roadshieldfont: "DejaVu Sans Bold";
 
-/* Highways and misc transportation */
+/* Misc transportation */
 @railroad: #444;
 @lightrail: #444;
 @aerialway: #666;

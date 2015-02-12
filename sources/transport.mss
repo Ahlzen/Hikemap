@@ -189,37 +189,113 @@
 		line-color: @bridgecase;
 		line-cap: butt;
 		[zoom>=14][zoom<=15]{ 
-			[highway='motorway'] { line-width: 9; }
-			[highway='trunk'] { line-width: 9; }
-			[highway='primary'] { line-width: 8.5; }
-			[highway='secondary'] { line-width: 8; }
+			[highway='motorway'] { line-width: 8; }
+			[highway='trunk'] { line-width: 8; }
+			[highway='primary'] { line-width: 7.5; }
+			[highway='secondary'] { line-width: 7; }
+			[highway='tertiary'] { line-width: 6.5; }
+			[highway='residential'],
+			[highway='unclassified'],
+			[highway='motorway_link'],
+			[highway='trunk_link'],
+			[highway='primary_link'],
+			[highway='secondary_link'],
+			[highway='tertiary_link'] { line-width: 5.5; }
+			[highway='service'] { line-width: 4.5; }
+		}
+		[zoom>=16] {
+			[highway='motorway'] { line-width: 10; }
+			[highway='trunk'] { line-width: 10; }
+			[highway='primary'] { line-width: 9.5; }
+			[highway='secondary'] { line-width: 8.5; }
 			[highway='tertiary'] { line-width: 7.5; }
 			[highway='residential'],
-			[highway='unclassified'] { line-width: 5.5; }
-			[highway='service'] { line-width: 4.5; }
+			[highway='unclassified'],
 			[highway='motorway_link'],
 			[highway='trunk_link'],
 			[highway='primary_link'],
 			[highway='secondary_link'],
 			[highway='tertiary_link'] { line-width: 6.5; }
-		}
-		[zoom>=16] {
-			[highway='motorway'] { line-width: 12; }
-			[highway='trunk'] { line-width: 12; }
-			[highway='primary'] { line-width: 11; }
-			[highway='secondary'] { line-width: 10; }
-			[highway='tertiary'] { line-width: 9; }
-			[highway='residential'],
-			[highway='unclassified'] { line-width: 8; }
 			[highway='service'] { line-width: 5; }
-			[highway='motorway_link'],
-			[highway='trunk_link'],
-			[highway='primary_link'],
-			[highway='secondary_link'],
-			[highway='tertiary_link'] { line-width: 8; }
 		}
 	}
 }
+
+
+//// Shields and road labels
+
+#transportShieldsAndLabelsHizoom [zoom>=9]
+{
+  // Shields
+  ::interstateShields [interstate!=''],
+  ::usShields [usroute!='']
+  // TODO: Add state shields
+  {
+    shield-placement: line;
+    shield-face-name: @roadshieldfont;
+    shield-avoid-edges: true;
+    shield-min-distance: 80;
+    shield-spacing: 500;
+    shield-size: 8;
+    [interstate!=''] {
+       shield-name: "[interstate]";
+       shield-fill: white;
+       shield-file: url(../symbols/shield-interstate.svg);
+    }
+    [usroute!=''] {
+       shield-name: "[usroute]";
+       shield-fill: black;
+       shield-file: url(../symbols/shield-us.svg);
+    }
+    // TODO: Scale shields
+    //[textlen<=2] { shield-transform: scale(0.7, 0.7); }
+    //[textlen>=3] { shield-transform: scale(0.9, 0.75); }
+  }
+  
+  // Road labels
+  ::roadLabelsMajor [zoom=14] {
+    [highway='motorway'], [highway='trunk'],
+    [highway='primary'], [highway='secondary']
+    {
+       text-name: "[name]"; 
+       text-face-name: @roadlabelfont;
+       //text-size: 10;
+       text-min-path-length: 150;
+       text-spacing: 400;
+       text-min-distance: 100;
+       text-avoid-edges: true;
+       text-placement: line;
+       //text-halo-fill: white;
+       text-halo-radius: 2px;
+       text-max-char-angle-delta: 20;
+       [highway='motorway'] { text-halo-fill: @interstate; text-size: 11; }
+       [highway='trunk'] { text-halo-fill: @trunk; text-size: 11; }
+       [highway='primary'] { text-halo-fill: @primary; text-size: 10; }
+       [highway='secondary'] { text-halo-fill: @secondary; text-size: 10; }
+    }
+  }
+
+  ::roadLabelsAll [zoom>=15] {
+    text-name: "[name]"; 
+    text-face-name: @roadlabelfont;
+    text-size: 11;
+    text-min-path-length: 150;
+    text-spacing: 400;
+    text-min-distance: 50;
+    text-avoid-edges: true;
+    text-placement: line;
+    text-halo-fill: white;
+    text-halo-radius: 2px;
+    text-max-char-angle-delta: 20;
+    //[highway='motorway'], [highway='trunk'], [highway='primary'] {
+    //  text-size: 12;
+    //}
+    [highway='motorway'] { text-halo-fill: @interstate; text-size: 13; }
+    [highway='trunk'] { text-halo-fill: @trunk; text-size: 13; }
+    [highway='primary'] { text-halo-fill: @primary; text-size: 12; }
+    [highway='secondary'] { text-halo-fill: @secondary; text-size: 12; }
+  }
+} 
 
 
 //// Ski lifts etc

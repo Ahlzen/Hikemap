@@ -2,11 +2,7 @@
   "srs": "${EPSG3857}",
   "Stylesheet": [
     "common.mss",
-    "hydro.mss",
-    "transport.mss",
-    "trails.mss",
-    "placenames.mss",
-    "points.mss"
+    "transport.mss"
   ],
   "Layer":
   [
@@ -153,8 +149,6 @@
         ${DBSETTINGS},
         "table": "(SELECT way,name,man_made,barrier FROM ${OSM_TABLE_PREFIX}_point WHERE man_made='tower' OR barrier='gate') AS p"
       }},
-
-
     {
       "name": "nhdAreaLabel",
       "id": "nhdAreaLabel",
@@ -178,6 +172,15 @@
       "Datasource": {
         ${DBSETTINGS},
         "table": "(SELECT way,fcode,lengthkm,gnis_name FROM ${NHD_TABLE_PREFIX}_flowline WHERE fcode IN (33400,33600,33601,46000,46006)) AS f"
+      }},
+
+    {
+      "name": "transportShieldsAndLabelsHizoom",
+      "id": "transportShieldsAndLabelsHizoom",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way,highway,name,substring(ref from '^I[ -]([0-9A]+)') AS interstate,substring(ref from '^US[ -]([0-9A]+)') AS usroute FROM ${OSM_TABLE_PREFIX}_line WHERE highway IN ('motorway','trunk','primary','secondary','tertiary','residential','unclassified') OR railway IN ('rail','light_rail','preserved','subway','tram','funicular','monorail') ORDER BY z_order) AS r"
       }}
   ]
 }
