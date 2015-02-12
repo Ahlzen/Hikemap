@@ -19,3 +19,12 @@ echo "CREATE INDEX idx_point_places ON ${OSM_TABLE_PREFIX}_point USING gist(way)
 
 # Natural
 echo "CREATE INDEX idx_point_peaks ON ${OSM_TABLE_PREFIX}_point USING gist(way) WHERE \"natural\" = 'peak'" | $DBCMD
+
+# State borders
+echo "CREATE INDEX idx_line_stateborders ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE \"boundary\" = 'administrative' AND admin_level='4'" | $DBCMD
+
+# Parks etc
+echo "CREATE INDEX idx_poly_parks ON ${OSM_TABLE_PREFIX}_polygon USING gist(way) WHERE landuse IN ('forest','vineyard','conservation','recreation_ground','village_green','cemetery') OR leisure IN ('nature_reserve','park','common','recreation_ground','playground','garden','golf course')" | $DBCMD
+
+# Road shields/labels
+# TODO

@@ -201,9 +201,7 @@
       "Datasource": {
         ${DBSETTINGS},
         "table": "(SELECT way, name, way_area, leisure, landuse, \"natural\" FROM ${OSM_TABLE_PREFIX}_polygon WHERE landuse IN ('forest','vineyard','conservation','recreation_ground','village_green','cemetery') OR leisure IN ('nature_reserve','park','common','recreation_ground','playground','garden','golf course')) AS p"
-      }
-    },
-
+      }},
     {
       "name": "transportShieldsAndLabelsHizoom",
       "id": "transportShieldsAndLabelsHizoom",
@@ -212,7 +210,6 @@
         ${DBSETTINGS},
         "table": "(SELECT way,highway,name,substring(ref from '^I[ -]([0-9A]+)') AS interstate,substring(ref from '^US[ -]([0-9A]+)') AS usroute FROM ${OSM_TABLE_PREFIX}_line WHERE highway IN ('motorway','trunk','primary','secondary','tertiary','residential','unclassified') OR railway IN ('rail','light_rail','preserved','subway','tram','funicular','monorail') ORDER BY z_order) AS r"
       }},
-
     {
       "name": "stateLabels",
       "id": "stateLabels",
