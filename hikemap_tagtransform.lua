@@ -4,6 +4,7 @@
 -- * Removes all tags with certain prefixes (massgis, gnis, ...)
 -- * Tag unification (e.g. riverbank, trail, light rail)
 -- * Basic (English) abbreviations for names
+-- * Road classification by ref (interstate, US route, state route etc)
 -- Logs errors and values that coudln't be converted.
 
 
@@ -274,6 +275,44 @@ function abbreviate_name(keyvalues)
 end
 
 
+-- Classify roads
+
+-- List of {pattern, road_class}. Add as needed.
+-- (road_ref is the first match in the pattern)
+highwayPatterns = {
+   {"%s*I[ -]?(%S+)", "I"},
+   {"%s*US[ -]?(%S+)", "U"},
+   {"%s*SR[ -]?(%S+)", "S"},
+   {"%s*MA[ -]?(%S+)", "S"},
+   {"%s*NH[ -]?(%S+)", "S"},
+   {"%s*VT[ -]?(%S+)", "S"},
+   {"%s*CR[ -]?(%S+)", nil} -- county route
+}
+
+function classify_road(keyvalues)
+   highway = keyvalues['highway']
+   ref = keyvalues['ref']
+   if highway == nil or ref == nil then
+      return
+   end
+
+   -- Combined ref (e.g. "I 90;US 1"): use first value only
+   cpos = ref:find(';')
+   if cpos then ref = ref:sub(1,cpos-1) end
+
+   -- Match patterns, one by one
+   for i,p in pairs(highwayPatterns) do
+      pat = p[1]
+      road_class = p[2]
+      s,e,road_ref = ref:find(pat)
+      if s then
+         keyvalues['road_class'] = road_class;
+         keyvalues['road_ref'] = road_ref;
+         break;
+      end
+   end 
+end
+
 
 -- Standard functions
 
@@ -397,6 +436,7 @@ function filter_tags_way (keyvalues, nokeys)
 
    keyvalues, roads = add_z_order(keyvalues)
 
+   classify_road(keyvalues)
 
    return filter, keyvalues, poly, roads
 end

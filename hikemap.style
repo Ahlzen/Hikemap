@@ -85,6 +85,8 @@ node,way   rail_class   text         linear  # populated by tag transform
 node,way   ref          text         linear
 node,way   religion     text         nocache
 node,way   route        text         linear
+node,way   road_class   text         linear  # populated by tag transform
+node,way   road_ref     text         linear  # populated by tag transform
 node,way   service      text         linear
 node,way   shop         text         polygon
 node,way   short_name   text         linear
