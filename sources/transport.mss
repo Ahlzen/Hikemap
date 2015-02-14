@@ -227,29 +227,24 @@
 #transportShieldsAndLabelsHizoom [zoom>=9]
 {
   // Shields
-  ::interstateShields [interstate!=''],
-  ::usShields [usroute!='']
-  // TODO: Add state shields
-  {
+  [road_class != ''] {
     shield-placement: line;
     shield-face-name: @roadshieldfont;
-    shield-avoid-edges: true;
-    shield-min-distance: 80;
-    shield-spacing: 500;
-    shield-size: 8;
-    [interstate!=''] {
-       shield-name: "[interstate]";
+    shield-min-distance: 30;
+    shield-spacing: 300;
+    shield-size: 12;
+    shield-fill: black;
+    shield-file: url(../symbols/shield-state.svg);
+    shield-name: "[road_ref]";
+    shield-transform: scale(0.9, 0.9);
+    shield-character-spacing: 1;
+    [road_class='I'] {
        shield-fill: white;
        shield-file: url(../symbols/shield-interstate.svg);
     }
-    [usroute!=''] {
-       shield-name: "[usroute]";
-       shield-fill: black;
+    [road_class='U'] {
        shield-file: url(../symbols/shield-us.svg);
     }
-    // TODO: Scale shields
-    //[textlen<=2] { shield-transform: scale(0.7, 0.7); }
-    //[textlen>=3] { shield-transform: scale(0.9, 0.75); }
   }
   
   // Road labels
@@ -265,7 +260,6 @@
        text-min-distance: 100;
        text-avoid-edges: true;
        text-placement: line;
-       //text-halo-fill: white;
        text-halo-radius: 2px;
        text-max-char-angle-delta: 20;
        [highway='motorway'] { text-halo-fill: @interstate; text-size: 11; }
@@ -287,9 +281,6 @@
     text-halo-fill: white;
     text-halo-radius: 2px;
     text-max-char-angle-delta: 20;
-    //[highway='motorway'], [highway='trunk'], [highway='primary'] {
-    //  text-size: 12;
-    //}
     [highway='motorway'] { text-halo-fill: @interstate; text-size: 13; }
     [highway='trunk'] { text-halo-fill: @trunk; text-size: 13; }
     [highway='primary'] { text-halo-fill: @primary; text-size: 12; }

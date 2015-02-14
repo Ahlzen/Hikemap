@@ -35,7 +35,9 @@
 @smallroadtunnel: lighten(@smallroad, 10%);
 @parking: #fff;
 @roadlabelfont: "Alegreya Sans Medium";
-@roadshieldfont: "DejaVu Sans Bold";
+//@roadshieldfont: "DejaVu Sans Bold";
+@roadshieldfont: "Blue Highway Bold";
+@roadshieldfontcond: "Blue Highway Condensed Regular";
 
 /* Misc transportation */
 @railroad: #444;

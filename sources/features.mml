@@ -208,7 +208,7 @@
       "srs": "${EPSG3857}",
       "Datasource": {
         ${DBSETTINGS},
-        "table": "(SELECT way,highway,name,substring(ref from '^I[ -]([0-9A]+)') AS interstate,substring(ref from '^US[ -]([0-9A]+)') AS usroute FROM ${OSM_TABLE_PREFIX}_line WHERE highway IN ('motorway','trunk','primary','secondary','tertiary','residential','unclassified') OR railway IN ('rail','light_rail','preserved','subway','tram','funicular','monorail') ORDER BY z_order) AS r"
+        "table": "(SELECT way,highway,name,road_class,road_ref FROM ${OSM_TABLE_PREFIX}_line WHERE highway IN ('motorway','trunk','primary','secondary','tertiary','residential','unclassified') OR railway IN ('rail','light_rail','preserved','subway','tram','funicular','monorail') ORDER BY z_order) AS r"
       }},
     {
       "name": "stateLabels",
