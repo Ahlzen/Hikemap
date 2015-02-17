@@ -1,7 +1,7 @@
 # Map extents (in whole degrees)
-export XMIN=-72
-export XMAX=-71
-export YMIN=44
+export XMIN=-73
+export XMAX=-70
+export YMIN=43
 export YMAX=45
 
 # Database settings

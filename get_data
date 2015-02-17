@@ -41,24 +41,28 @@ function get_nlcd_canopy {
    }" > "temp/nlcd2011canopyGray.vrt"
 
   echo "Expanding indexed image to grayscale"
-  gdal_translate -expand gray temp/nlcd2011canopyGray.vrt temp/nlcd2011canopyGray.tif
+  gdal_translate -co BIGTIFF=YES -expand gray temp/nlcd2011canopyGray.vrt temp/nlcd2011canopyGray.tif
 
   # TODO: Can't crop to a rectangular area because of the projection. Remove.
 
-  echo "Cropping to map bounds"
-  gdal_translate -projwin $XMINA $YMAXA $XMAXA $YMINA \
-   temp/nlcd2011canopyGray.tif temp/nlcd2011canopyGrayCropped.tif
+  #echo "Cropping to map bounds"
+  #gdal_translate -projwin $XMINA $YMAXA $XMAXA $YMINA \
+  # temp/nlcd2011canopyGray.tif temp/nlcd2011canopyGrayCropped.tif
 
   # TODO: Tiled GeoTIFF may be faster for large areas?
 
   echo "Reprojecting to 3857"
   gdalwarp -t_srs EPSG:3857 -r bilinear \
-   -co COMPRESS=DEFLATE -co ZLEVEL=9 -co PREDICTOR=2 -multi \
-   temp/nlcd2011canopyGrayCropped.tif data/canopy/nlcd2011canopyGray.tif
+   -co COMPRESS=DEFLATE -co ZLEVEL=9 -co PREDICTOR=2 \
+   -co TILED=YES -co BIGTIFF=YES -multi \
+   temp/nlcd2011canopyGray.tif data/canopy/nlcd2011canopyGray.tif
 
   echo "Adding overviews"
-  gdaladdo data/canopy/nlcd2011canopyGray.tif 2 4 8 16 32
-  
+  gdaladdo --config COMPRESS_OVERVIEW DEFLATE \
+    --config PREDICTOR_OVERVIEW 2 \
+    --config BIGTIFF_OVERVIEW YES \
+    data/canopy/nlcd2011canopyGray.tif 2 4 8 16 32
+      
   rm temp/*
 }
 

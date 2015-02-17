@@ -12,7 +12,7 @@ In part based on earlier work from
 
 For Debian/Ubuntu based systems, these packages will get you most of the way:
 
-`postgresql postgresql-client postgresql-9.3-postgis-2.1 postgis wget tilestache python-numpy python-scipy python-pil proj-bin libmapnik mapnik-utils node-carto unzip fonts-dejavu fonts-dejavu-extra fonts-liberation fonts-sil-gentium fonts-sil-gentium-basic`
+`postgresql postgresql-client postgresql-9.3-postgis-2.1 postgis wget tilestache python-numpy python-scipy python-pil proj-bin libmapnik2.2 mapnik-utils node-carto unzip fonts-dejavu fonts-dejavu-extra fonts-liberation fonts-sil-gentium fonts-sil-gentium-basic fonts-larabie-straight`
 
 (`postgresql` and `postgis` versions may depend on your distro)
 
