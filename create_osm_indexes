@@ -28,3 +28,6 @@ echo "CREATE INDEX idx_poly_parks ON ${OSM_TABLE_PREFIX}_polygon USING gist(way)
 
 # Transport shields/labels
 echo "CREATE INDEX idx_line_transportlabels ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE highway IN ('motorway','trunk','primary','secondary','tertiary','residential','unclassified') OR railway IN ('rail','light_rail','preserved','subway','tram','funicular','monorail')" | $DBCMD
+
+# Special landcover (natural=*)
+echo "CREATE INDEX idx_poly_cover ON ${OSM_TABLE_PREFIX}_polygon USING gist(way) WHERE \"natural\" IN ('rock','bare_rock','cliff','scree')" | $DBCMD

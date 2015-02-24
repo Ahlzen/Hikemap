@@ -11,7 +11,7 @@
 <Layer name="canopy_mask" srs="${EPSG3857}">
     <StyleName>canopy_mask</StyleName>
     <Datasource>
-      <Parameter name="file">../data/canopy/nlcd2011canopyGray.tif</Parameter>
+      <Parameter name="file">../data/canopy/nlcd2011canopyGrayTiled.vrt</Parameter>
       <Parameter name="type">gdal</Parameter>
     </Datasource>
 </Layer>

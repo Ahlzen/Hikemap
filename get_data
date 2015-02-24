@@ -55,13 +55,13 @@ function get_nlcd_canopy {
   gdalwarp -t_srs EPSG:3857 -r bilinear \
    -co COMPRESS=DEFLATE -co ZLEVEL=9 -co PREDICTOR=2 \
    -co TILED=YES -co BIGTIFF=YES -multi \
-   temp/nlcd2011canopyGray.tif data/canopy/nlcd2011canopyGray.tif
+   temp/nlcd2011canopyGray.tif data/canopy/nlcd2011canopyGrayTiled.tif
 
   echo "Adding overviews"
   gdaladdo --config COMPRESS_OVERVIEW DEFLATE \
     --config PREDICTOR_OVERVIEW 2 \
     --config BIGTIFF_OVERVIEW YES \
-    data/canopy/nlcd2011canopyGray.tif 2 4 8 16 32
+    data/canopy/nlcd2011canopyGrayTiled.tif 2 4 8 16 32
       
   rm temp/*
 }
@@ -86,10 +86,12 @@ function get_ned {
   echo "Converting NED to GeoTIFF"
   for f in data/ned13/*.zip ; do
    BASE=`basename $f .zip`
-   unzip $f -d temp
-   gdal_translate -of GTiff temp/img${BASE}_13.img \
-   	data/ned13/$BASE.tif
-   rm temp/*
+   DEST="data/ned13/$BASE.tif"
+   if [[ ! -f $DEST ]] ; then
+    unzip $f -d temp
+    gdal_translate -of GTiff temp/img${BASE}_13.img $DEST
+    rm temp/*
+   fi
   done
 }
 
@@ -170,8 +172,12 @@ function get_nhd {
   #echo $NHDURLS
   for url in $NHDURLS ; do
     BASE=`basename $url .zip`
-    if [[ ! -f data/nhd/hi/$BASE ]] ; then
+    DEST=data/nhd/hi/$BASE.gdb.zip
+    echo $BASE
+    if [[ ! -f data/nhd/hi/$BASE.gdb.zip ]] ; then
       wget -O data/nhd/hi/$BASE.gdb.zip "$url"
+    else
+     echo $DEST exists. Skipping download.
     fi
   done
 }

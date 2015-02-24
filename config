@@ -10,7 +10,7 @@ export DB_USER=`whoami`
 export DB_NAME="gis"
 
 # Table for contour line data
-export CONTOURS_TABLE="contours50ft"
+export CONTOURS_TABLE="hikemap_contours50ft"
 
 # Table prefix for OSM data
 export OSM_TABLE_PREFIX="osm_ne"

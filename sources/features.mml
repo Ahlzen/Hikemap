@@ -2,6 +2,7 @@
   "srs": "${EPSG3857}",
   "Stylesheet": [
 "common.mss",
+    "areas.mss",
     "hydro.mss",
     "transport.mss",
     "trails.mss",
@@ -11,6 +12,14 @@
   ],
   "Layer":
   [
+    {
+      "name": "naturalLandcover",
+      "id": "naturalLandcover",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way,\"natural\" FROM ${OSM_TABLE_PREFIX}_polygon WHERE \"natural\" IN ('rock','bare_rock','cliff','scree')) AS n"
+      }},
     {
       "name": "nhdWetland",
       "id": "nhdWetland",
