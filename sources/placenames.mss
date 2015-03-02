@@ -16,7 +16,7 @@
     text-halo-fill: @placenamehalo;
     text-name: "[short_name]";
   }
-  [zoom>=10][zoom<=12][priority<=8] {
+  [zoom>=10][zoom<=12][priority<=6] {
     text-face-name: @placenamefont;
     text-size: 10;
     text-dy: 8;

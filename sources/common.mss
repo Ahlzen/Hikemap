@@ -21,6 +21,7 @@
 @transportation: #069;
 @roadcase: black;
 @bridgecase: black;
+@roadslowzoom: #444;
 @interstate: #fbb;
 @interstatetunnel: lighten(@interstate, 10%);
 @trunk: #fcb;

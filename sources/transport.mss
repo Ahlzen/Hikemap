@@ -1,6 +1,6 @@
 //// Heavy rail
 
-#rail [rail_class='heavy'][zoom>=12][zoom<=13] {
+#rail [rail_class='heavy'][zoom>=10][zoom<=13] {
   line-width: 0.9;
   line-color: @railroad;
   ::ties { line-width: 3.5; line-dasharray: 0.9,12; line-color: @railroad; }
@@ -36,10 +36,23 @@
 }
 
 
+//// Roads (major roads @ low zoom levels)
+
+#roadsLowzoom [zoom >= 6][zoom <= 7] {
+	[highway='motorway']       { line-color: @roadslowzoom; line-width: 1.2; }
+    [highway='trunk']          { line-color: @roadslowzoom; line-width: 0.8; }
+}
+
+#roadsLowzoom [zoom >= 8][zoom <= 9] {
+	[highway='motorway']       { line-color: @roadslowzoom; line-width: 1.5; }
+    [highway='trunk']          { line-color: @roadslowzoom; line-width: 1.2; }
+    [highway='primary']        { line-color: @roadslowzoom; line-width: 0.8; }
+}
+
 
 //// Roads (detailed)
 
-#roads::outline [zoom >= 10]
+#roadsHizoom::outline [zoom >= 10]
 {
 	line-width: 0;
 	line-color: @roadcase;
@@ -47,7 +60,23 @@
 	line-cap: round;
 
 	[zoom>=10][zoom<=11] {
-		// TODO
+		[highway='motorway']       { line-width: 3; }
+	    [highway='trunk']          { line-width: 3; }
+	    [highway='primary']        { line-width: 3; }
+	    [highway='secondary']      { line-width: 2.5; }
+	    [highway='tertiary']       { line-width: 2.0; }
+	    [highway='residential'],
+	    [highway='unclassified'],
+	    [highway='motorway_link'],
+	    [highway='trunk_link'],
+	    [highway='primary_link'],
+	    [highway='secondary_link'],
+	    [highway='tertiary_link']  { line-width: 1.5; }
+	    [tunnel='yes'] {
+	    	line-dasharray: 6,3;
+	    	line-cap: butt;
+	    	line-color: lighten(@roadcase, 40%);
+	    }
 	}
 	[zoom>=12][zoom<=13] {	
 		[highway='motorway']       { line-width: 4; }
@@ -111,7 +140,7 @@
 	}
 }
 
-#roads [zoom >= 10]
+#roadsHizoom [zoom >= 10]
 {
 	line-width: 0;
 	line-color: @smallroad; // default fill
@@ -131,7 +160,18 @@
 
 	/* Road fill widths */
 	[zoom>=10][zoom<=11] {
-		// TODO
+		[highway='motorway']       { line-width: 2; }
+		[highway='trunk']          { line-width: 2; }
+		[highway='primary']        { line-width: 2; }
+		[highway='secondary']      { line-width: 1.5; }
+		[highway='tertiary']       { line-width: 1.0; }
+		[highway='residential'],
+		[highway='unclassified'],
+		[highway='motorway_link'],
+		[highway='trunk_link'],
+		[highway='primary_link'],
+		[highway='tertiary_link'],
+		[highway='tertiary_link']  { line-width: 1.0; }
 	}
 	[zoom>=12][zoom<=13] {	
 		[highway='motorway']       { line-width: 3; }
@@ -224,7 +264,7 @@
 
 //// Shields and road labels
 
-#transportShieldsAndLabelsHizoom [zoom>=9]
+#transportShieldsAndLabelsHizoom [zoom >= 10]
 {
   // Shields
   [road_class != ''] {

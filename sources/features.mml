@@ -116,8 +116,16 @@
         "table": "(SELECT way, railway, rail_class, name, tunnel, bridge FROM ${OSM_TABLE_PREFIX}_line WHERE railway IS NOT NULL) AS r"
       }},
     {
-      "name": "roads",
-      "id": "roads",
+      "name": "roadsLowzoom",
+      "id": "roadsLowzoom",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way,highway FROM ${OSM_TABLE_PREFIX}_roads WHERE highway IN ('motorway','trunk','primary')) AS r"
+      }},
+    {
+      "name": "roadsHizoom",
+      "id": "roadsHizoom",
       "srs": "${EPSG3857}",
       "Datasource": {
         ${DBSETTINGS},
