@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="10"
+   height="10"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="at.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="32"
+     inkscape:cx="4.1250618"
+     inkscape:cy="8.0408066"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     borderlayer="true"
+     inkscape:snap-global="false"
+     inkscape:window-width="1079"
+     inkscape:window-height="789"
+     inkscape:window-x="48"
+     inkscape:window-y="121"
+     inkscape:window-maximized="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2985"
+       units="mm"
+       empspacing="4"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-1042.3622)">
+    <g
+       style="fill:#004b00;fill-opacity:1;stroke:#ffffff;stroke-opacity:1;stroke-width:0.16019124;stroke-miterlimit:4;stroke-dasharray:none"
+       transform="matrix(2.4970155,0,0,2.4970155,-4.472971,-1566.1773)"
+       id="g3893">
+      <g
+         transform="translate(0,1042.3622)"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#004b00;fill-opacity:1;stroke:#ffffff;font-family:Century Schoolbook L;-inkscape-font-specification:Century Schoolbook L Medium;stroke-opacity:1;stroke-width:0.16019124;stroke-miterlimit:4;stroke-dasharray:none"
+         id="g3895">
+        <path
+           sodipodi:nodetypes="cccccccccccccccccccccccc"
+           inkscape:connector-curvature="0"
+           id="path3897"
+           d="M 3.34375,2.375 2,5.125 l 0.78125,0 0.28125,-0.59375 0.375,0 0,1.703125 0.6875,0 0,-1.703125 0.375,0 0.3125,0.59375 0.75,0 L 4.25,2.375 z m 0.4414063,0.515625 c 0.00258,0.00684 0.02694,-0.012369 0.03125,0 0.010337,0.024742 0.013556,0.00781 0.027344,0.046875 0.015509,0.037762 0.043542,0.078127 0.0625,0.125 L 3.96875,3.21875 4.3125,4 3.28125,4 3.625,3.21875 C 3.645679,3.1731793 3.668542,3.108075 3.6875,3.0625 3.708178,3.0156268 3.736212,2.975263 3.75,2.9375 3.765508,2.899742 3.7765363,2.915367 3.7851563,2.890625 z"
+           style="font-size:4px;font-weight:bold;fill:#004b00;fill-opacity:1;stroke:#ffffff;font-family:Liberation Sans;-inkscape-font-specification:Liberation Sans Bold;stroke-opacity:1;stroke-width:0.16019124;stroke-miterlimit:4;stroke-dasharray:none" />
+      </g>
+      <g
+         transform="matrix(1.174222,0,0,1,-4.6617241,1042.5043)"
+         style="font-size:4px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#004b00;fill-opacity:1;stroke:#ffffff;font-family:Century Schoolbook L;-inkscape-font-specification:Century Schoolbook L Medium;stroke-opacity:1;stroke-width:0.14783036;stroke-miterlimit:4;stroke-dasharray:none"
+         id="g3899" />
+    </g>
+  </g>
+</svg>

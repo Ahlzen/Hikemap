@@ -1,5 +1,28 @@
-// TODO: Highlight major trail networks, like AT
+//// Trail networks (highlights/shields)
 
+#trailNetworks [zoom >= 8]
+{
+  line-color: @trailnetworkbg;
+  line-opacity: 0.25;
+  [zoom <= 11] { line-width: 3px; }
+  [zoom >= 12] { line-width: 5px; }
+}
+
+#trailNetworkShields [zoom >= 10]
+{
+  [ref='AT'] {
+    shield-placement: line;
+    shield-face-name: @roadshieldfont;
+    shield-min-distance: 50;
+    shield-spacing: 300;
+    shield-file: url(../symbols/at.svg);
+    shield-name: "";
+    shield-transform: scale(1.6, 1.6);
+  }
+}
+
+
+//// Trails
 
 #trails [zoom>=10][zoom<=11]
 { 
@@ -14,7 +37,6 @@
     line-dasharray: 3, 1.5;
   } 
 }
-
 
 #trails [zoom>=12][zoom<=13]
 {
@@ -36,7 +58,6 @@
     }
   //}
 }
-
 
 #trails [zoom>=14]
 {

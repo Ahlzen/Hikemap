@@ -48,6 +48,7 @@
 @trailcolor: #000;
 @trailbg: rgba(255,255,255,0.0);
 @traillabelfont: "Alegreya Sans SC Medium";
+@trailnetworkbg: #007010;
 
 /* Borders */
 @stateLabelFont: "DejaVu Sans Condensed Bold";

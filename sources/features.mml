@@ -100,6 +100,14 @@
         "table": "(SELECT way, waterway, name FROM ${OSM_TABLE_PREFIX}_polygon WHERE waterway IN ('dam','weir','lock_gate')) AS barriers"
       }},
     {
+      "name": "trailNetworks",
+      "id": "trailNetworks",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way, ref FROM ${OSM_TABLE_PREFIX}_line WHERE route = 'hiking' AND ref IN ('AT')) AS t"
+      }},
+    {
       "name": "trails",
       "id": "trails",
       "srs": "${EPSG3857}",
@@ -178,6 +186,14 @@
       "Datasource": {
         ${DBSETTINGS},
         "table": "(SELECT way, highway, name, short_name FROM ${OSM_TABLE_PREFIX}_line WHERE highway IN ('track', 'bridleway', 'footway', 'path', 'pedestrian', 'cycleway')) AS t"
+      }},
+    {
+      "name": "trailNetworkShields",
+      "id": "trailNetworkShields",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way, ref FROM ${OSM_TABLE_PREFIX}_line WHERE route = 'hiking' AND ref IN ('AT')) AS t"
       }},
     {
       "name": "miscpoints",
