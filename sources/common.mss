@@ -22,13 +22,13 @@
 @roadcase: black;
 @bridgecase: black;
 @roadslowzoom: #444;
-@interstate: #fbb;
+@interstate: #abf;
 @interstatetunnel: lighten(@interstate, 10%);
-@trunk: #fcb;
+@trunk: #fbb;
 @trunktunnel: lighten(@trunk, 10%);
-@primary: #fdb;
+@primary: #fcb;
 @primarytunnel: lighten(@primary, 10%);
-@secondary: #feb;
+@secondary: #fdb;
 @secondarytunnel: lighten(@secondary, 10%);
 @tertiary: #ffb;
 @secondarytunnel: lighten(@secondary, 10%);
