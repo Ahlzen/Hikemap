@@ -15,14 +15,14 @@
    text-fill: @peakcolor;
    text-halo-fill: @peakhalo;
    text-halo-radius: 1.5;
-   [zoom >= 14] {
+   [zoom >= 13] {
       text-name: "[name]";
       text-size: 13;
       ::elevation [ele_ft!=""] {
          text-name: [ele_ft] + ' ft';
          text-face-name: "Gentium Basic Bold Italic";
          text-size: 12;
-         text-dy: 22;
+         text-dy: 21;
          text-fill: @peakcolor;
          text-halo-fill: @peakhalo;
          text-halo-radius: 1.5;
