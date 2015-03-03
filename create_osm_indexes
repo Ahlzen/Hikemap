@@ -10,6 +10,7 @@ echo "CREATE INDEX idx_line_roads ON ${OSM_TABLE_PREFIX}_line USING gist(way) WH
 
 # Trails
 echo "CREATE INDEX idx_line_trails ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE highway IN ('track', 'bridleway', 'footway', 'path', 'pedestrian', 'cycleway');" | $DBCMD
+echo "CREATE INDEX idx_line_trailnetworks ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE route = 'hiking';" | $DBCMD
 
 # Coastline
 echo "CREATE INDEX idx_line_coastline ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE \"natural\" = 'coastline'" | $DBCMD
