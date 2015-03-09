@@ -25,7 +25,7 @@ mkdir -pv "$DESTDIR"
 
 # Generate Mapnik XML from Carto templates
 for SRC in `ls ${SOURCEDIR}/*.mml`; do
-    echo "Processing $SRC..."
+    echo -n "Processing $SRC... "
     DST="${DESTDIR}/`basename $SRC .mml`.xml"
            
     # use an intermediate temp file since carto can't read
@@ -40,12 +40,15 @@ for SRC in `ls ${SOURCEDIR}/*.mml`; do
     # read errors from output file
     # (carto writes these to stdout and always returns 0)
     cat $DST | grep "carto:"
+
+    echo `wc -l $DST | cut -d " " -f 1` lines.
 done
 
 # Process xml,inc,cfg files
 for SRC in `ls ${SOURCEDIR}/*.{xml,cfg}`; do
-    echo "Processing $SRC..."
+    echo -n "Processing $SRC... "
     DST="${DESTDIR}/`basename $SRC`"        
     cat $SRC | awk "$AWKFILTER" > $DST
+    echo `wc -l $DST | cut -d " " -f 1` lines.
 done
 
