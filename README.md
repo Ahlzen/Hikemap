@@ -98,4 +98,4 @@ tilestache-server.py --config=processed/tilestache.conf
 
 The [tilestache documentation](http://tilestache.org/doc/) describes how to serve tiles using web servers more suitable for production.
 
-Alternatively, you can use `tilestache-seed` to pre-render a set of tiles.
+Alternatively, the included 'seed' script can be used to pre-render a set of tiles for the configured area and zoom levels.
