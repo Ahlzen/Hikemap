@@ -21,9 +21,10 @@ export NHD_TABLE_PREFIX="hikemap_nhd"
 # Command that SQL command can be piped to
 export DBCMD="psql -q $DB_NAME"
 
-# NxN metatile size for rendering
+# NxN metatiles and zoom levels for rendering
 export METATILE=6
-
+export ZMIN=8
+export ZMAX=15
 
 #### These should not normally need to be changed
 

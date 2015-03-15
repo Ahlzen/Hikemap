@@ -1,0 +1,73 @@
+#!/bin/bash
+source ./config
+
+# Tiles will end up here:
+TILE_DIR="tiles"
+
+# Extra arguments for parallel:
+# For example, to limit rendering to two
+# parallel processes, use:
+# PARALLEL_ARGS="-j 2"
+PARALLEL_ARGS=""
+
+# Seed script to use. Adjust e.g. to use a
+# local/experimental version.
+SEED=`which tilestache-seed`
+
+# Extra arguments for tilestache-seed.
+# For example, to force re-render of all tiles,
+# use SEED_ARGS="--ignore-cached"
+SEED_ARGS=""
+
+# Optimize png tiles with optipng (true/false)?
+OPTIMIZE_PNG=false
+
+# Extra arguments for optipng.
+# For example, to perform a very thorough (and
+# very slow) optimization, use:
+# OPTIPNG_ARGS="-o 5"
+OPTIPNG_ARGS=""
+
+# Create optimized JPEG composite tiles?
+# If true, you must specify path to cjpeg binary
+# (from the MozJPEG project). MozJPEG 3+ has
+# some nice tricks for smoother gradients and 
+# less edge artifacts.
+# See: http://calendar.perfplanet.com/2014/mozjpeg-3-0/
+COMPOSITE_JPEG=true
+CJPEG=$HOME/bin/cjpeg
+JPEG_QUALITY=90
+
+# Layers to render (in order)
+LAYERS="baselayer features composite"
+
+# HACK: There seems to be a memory leak that eventually
+# makes the render run out of memory and grind to a halt.
+# Workaround: Render 1x1 degree segements at a time.
+mkdir -pv "$TILE_DIR"
+parallel --linebuffer $PARALLEL_ARGS \
+	$SEED $SEED_ARGS -b {3} {2} \$[{3}+1] \$[{2}+1] \
+	-c processed/tilestache.cfg \
+	-d $TILE_DIR -l $LAYER {1} {4} \
+	::: $LAYERS \
+	::: `seq $XMIN $((XMAX-1))` \
+	:::	`seq $YMIN $((YMAX-1))` \
+	::: `seq $ZMIN $ZMAX`
+
+# Optimize PNG tiles
+if $OPTIMIZE_PNG ; then
+	for LAYER in $LAYERS ; do
+		echo "Optimizing PNG in $LAYER..."
+		find $TILE_DIR/$LAYER -name "*.png" | \
+			parallel -m --linebuffer $PARALLEL_ARGS optipng --quiet 
+    done	
+fi
+
+# Create JPEG composites
+if $COMPOSITE_JPEG ; then
+	echo "Creating JPEG composites..."
+	find $TILE_DIR/composite -name "*.png" | \
+		parallel echo '{}' \; convert '{}' TGA:- \| \
+		$CJPEG -sample 1x1 -quant-table 2 -quality $JPEG_QUALITY \
+		-outfile \`dirname '{}'\`/\`basename '{}' .png\`.jpg -targa
+fi
