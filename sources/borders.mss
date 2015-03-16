@@ -76,8 +76,6 @@
   line-width: 1.0;
   [zoom >= 13] { line-width: 1.5; }
   line-color: @parkcolor;
-  //line-opacity: 0.6;
-  //line-dasharray: 2, 2, 5, 2;
 }
  
 #parkLabels [zoom >= 8] {
@@ -90,17 +88,14 @@
     text-fill: @parkcolor;
     text-name: "[name]";
     text-size: 12;
-    //text-label-position-tolerance: 30;
     [zoom >= 12] { text-size: 13; }
   }}
   [zoom >= 12][zoom <= 13][way_area > 2000000],
   [zoom >= 14][way_area > 500000] {
     // Boundary labels
-    text-face-name: @parkfont;
-    
+    text-face-name: @parkfont;   
     text-halo-fill: @parkhalo;
     text-halo-radius: 1.0;
-    
     text-fill: @parkcolor;
     text-name: "[name]";
     text-size: 11;
