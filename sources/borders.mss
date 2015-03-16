@@ -71,42 +71,43 @@
       [zoom = 14] { line-width: 4; line-offset: -2; }
       [zoom>= 15] { line-width: 5; line-offset: -2.5; }
       line-color: @parkcolor;
-      line-opacity: 0.1;
+      line-opacity: 0.4;
   }
-  line-width: 0.5;
-  [zoom >= 13] { line-width: 0.7; }
+  line-width: 1.0;
+  [zoom >= 13] { line-width: 1.5; }
   line-color: @parkcolor;
-  line-opacity: 0.6;
-  line-dasharray: 2, 2, 5, 2;
+  //line-opacity: 0.6;
+  //line-dasharray: 2, 2, 5, 2;
 }
  
 #parkLabels [zoom >= 8] {
   [zoom >= 10][zoom <= 11][way_area > 10000000],
   [zoom >= 12][zoom <= 13][way_area > 2000000] {
-    // Center labels
+    ::centerlabels {
     text-face-name: @parkfont;
     text-halo-fill: @parkhalo;
     text-halo-radius: 1.5;
     text-fill: @parkcolor;
     text-name: "[name]";
-    text-size: 10;
-    text-label-position-tolerance: 30;
-    [zoom >= 12] { text-size: 11; }
-  }
+    text-size: 12;
+    //text-label-position-tolerance: 30;
+    [zoom >= 12] { text-size: 13; }
+  }}
+  [zoom >= 12][zoom <= 13][way_area > 2000000],
   [zoom >= 14][way_area > 500000] {
     // Boundary labels
     text-face-name: @parkfont;
-    /*
+    
     text-halo-fill: @parkhalo;
-    text-halo-radius: 1.5;
-    */
+    text-halo-radius: 1.0;
+    
     text-fill: @parkcolor;
     text-name: "[name]";
-    text-size: 10;
+    text-size: 11;
     text-placement: line;
-    text-dy: -14;
-    text-spacing: 600;
-    text-min-distance: 600;
+    text-dy: -13;
+    text-spacing: 500;
+    text-min-distance: 500;
     text-max-char-angle-delta: 20;
     text-character-spacing: 2;
   }

@@ -188,6 +188,14 @@
         "table": "(SELECT way, highway, name, short_name FROM ${OSM_TABLE_PREFIX}_line WHERE highway IN ('track', 'bridleway', 'footway', 'path', 'pedestrian', 'cycleway')) AS t"
       }},
     {
+      "name": "parkLabels",
+      "id": "parkLabels",
+      "srs": "${EPSG3857}",
+      "Datasource": {
+        ${DBSETTINGS},
+        "table": "(SELECT way, name, way_area, leisure, landuse, \"natural\" FROM ${OSM_TABLE_PREFIX}_polygon WHERE landuse IN ('forest','vineyard','conservation','recreation_ground','village_green','cemetery') OR leisure IN ('nature_reserve','park','common','recreation_ground','playground','garden','golf course')) AS p"
+      }},
+    {
       "name": "trailNetworkShields",
       "id": "trailNetworkShields",
       "srs": "${EPSG3857}",
@@ -226,14 +234,6 @@
       "Datasource": {
         ${DBSETTINGS},
         "table": "(SELECT way,fcode,lengthkm,gnis_name FROM ${NHD_TABLE_PREFIX}_flowline WHERE fcode IN (33400,33600,33601,46000,46006)) AS f"
-      }},
-    {
-      "name": "parkLabels",
-      "id": "parkLabels",
-      "srs": "${EPSG3857}",
-      "Datasource": {
-        ${DBSETTINGS},
-        "table": "(SELECT way, name, way_area, leisure, landuse, \"natural\" FROM ${OSM_TABLE_PREFIX}_polygon WHERE landuse IN ('forest','vineyard','conservation','recreation_ground','village_green','cemetery') OR leisure IN ('nature_reserve','park','common','recreation_ground','playground','garden','golf course')) AS p"
       }},
     {
       "name": "transportShieldsAndLabelsHizoom",
