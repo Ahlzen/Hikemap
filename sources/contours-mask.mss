@@ -2,12 +2,12 @@ Map {
 	background-color: black;
 }
 
-#contours [class=1][zoom>=10] {
+#contours [class=1][zoom>=13] {
 	line-color: white;
 	line-width: 0.4;
 }
 
-#contours::major [class=2][zoom>=10] {
+#contours::major [class=2][zoom>=11] {
 	line-color: white;
 	line-width: 0.8;
 	[zoom>=14] {
