@@ -11,7 +11,7 @@
 <Layer name="hillshade" srs="${EPSG3857}">
     <StyleName>hillshade</StyleName>
     <Datasource>
-      <Parameter name="file">../data/hillshade.vrt</Parameter>
+      <Parameter name="file">hillshade/hillshade.vrt</Parameter>
       <Parameter name="type">gdal</Parameter>
     </Datasource>
 </Layer>

@@ -1,250 +1,55 @@
 #!/bin/bash
 source ./config
 mkdir -pv data
-mkdir -pv temp
 
 
-#### NLCD Tree Canopy data
-function get_nlcd_canopy {
-  echo "Downloading NLCD 2011 Tree Canopy (cartographic)"
-  mkdir -pv data/canopy
-  CANOPYFILE="data/canopy/`basename $CANOPYURL`"
-  if [[ ! -f $CANOPYFILE ]] ; then
-   wget -c -P data/canopy $URL
-  else
-   echo $CANOPYFILE exists. Skipping download.
-  fi
-  unzip -j $CANOPYFILE -d temp
-
-  echo "Converting NLCD to GeoTIFF"
-  gdal_translate -of GTiff temp/nlcd2011_usfs_treecanopy_cartographic_3-31-2014.img temp/nlcd2011canopy.tif
-
-  echo "Creating VRT with custom grayscale colortable"
-  
-  gdalbuildvrt temp/nlcd2011canopy_orig.vrt temp/nlcd2011canopy.tif
-  echo "<ColorTable>" > temp/colortable_gray
-  for n in `seq 0 100` ; do
-   # (this tretches the 0-100 range to 0-255)
-   V=$(($n * 255 / 100))
-   echo "<Entry c1=\"$V\" c2=\"$V\" c3=\"$V\" c4=\"255\" />" >> temp/colortable_gray
-  done
-  for n in `seq 101 255` ; do
-  	echo '<Entry c1="255" c2="255" c3="255" c4="255" />' >> temp/colortable_gray
-  done
-  echo "</ColorTable>" >> temp/colortable_gray
-  cat temp/nlcd2011canopy_orig.vrt | sed \
-   -e "/<ColorTable>/ d" \
-   -e "/<Entry .*\/>/ d" \
-   -e "/<\/ColorTable>/ {
-   r temp/colortable_gray
-   d
-   }" > "temp/nlcd2011canopyGray.vrt"
-
-  echo "Expanding indexed image to grayscale"
-  gdal_translate -co BIGTIFF=YES -expand gray temp/nlcd2011canopyGray.vrt temp/nlcd2011canopyGray.tif
-
-  # TODO: Can't crop to a rectangular area because of the projection. Remove.
-
-  #echo "Cropping to map bounds"
-  #gdal_translate -projwin $XMINA $YMAXA $XMAXA $YMINA \
-  # temp/nlcd2011canopyGray.tif temp/nlcd2011canopyGrayCropped.tif
-
-  # TODO: Tiled GeoTIFF may be faster for large areas?
-
-  echo "Reprojecting to 3857"
-  gdalwarp -t_srs EPSG:3857 -r bilinear \
-   -co COMPRESS=DEFLATE -co ZLEVEL=9 -co PREDICTOR=2 \
-   -co TILED=YES -co BIGTIFF=YES -multi \
-   temp/nlcd2011canopyGray.tif data/canopy/nlcd2011canopyGrayTiled.tif
-
-  echo "Adding overviews"
-  gdaladdo --config COMPRESS_OVERVIEW DEFLATE \
-    --config PREDICTOR_OVERVIEW 2 \
-    --config BIGTIFF_OVERVIEW YES \
-    data/canopy/nlcd2011canopyGrayTiled.tif 2 4 8 16 32
-      
-  rm temp/*
-}
+echo "Downloading NLCD 2011 Tree Canopy (cartographic)"
+mkdir -pv data/canopy
+CANOPYFILE="data/canopy/`basename $CANOPYURL`"
+if [[ ! -f $CANOPYFILE ]] ; then
+  wget -P data/canopy $URL
+else
+  echo $CANOPYFILE exists. Skipping download.
+fi
 
 
-#### NED 1/3'
-function get_ned {
-  echo "Downloading NED data"
-  mkdir -pv data/ned13
-  for x in `seq $[-XMAX+1] $[-XMIN]` ; do
-   for y in `seq $[YMIN+1] $[YMAX]` ; do
+echo "Downloading NED data"
+mkdir -pv data/ned13
+for x in `seq $[-XMAX+1] $[-XMIN]` ; do
+  for y in `seq $[YMIN+1] $[YMAX]` ; do
     URL=`printf $NED13URL $y $x`
     FILENAME="data/ned13/`basename $URL`"
     if [[ ! -f $FILENAME ]] ; then
-     wget -P data/ned13 $URL
+      wget -P data/ned13 $URL
     else
-     echo $FILENAME exists. Skipping download.
+      echo $FILENAME exists. Skipping download.
     fi
-   done
   done
-
-  echo "Converting NED to GeoTIFF"
-  for f in data/ned13/*.zip ; do
-   BASE=`basename $f .zip`
-   DEST="data/ned13/$BASE.tif"
-   if [[ ! -f $DEST ]] ; then
-    unzip $f -d temp
-    gdal_translate -of GTiff temp/img${BASE}_13.img $DEST
-    rm temp/*
-   fi
-  done
-}
+done
 
 
-#### Hillshade
-function generate_hillshade {
-  echo "Generating hillshade"
-  mkdir -pv data/hillshade
-  for f in data/ned13/*.tif ; do
-   BASE=`basename $f`
-   gdaldem hillshade -z 1.5 -s 111120 -az 325 \
-  	$f temp/$BASE -of GTiff
-   gdalwarp -co COMPRESS=DEFLATE -co ZLEVEL=9 -co PREDICTOR=2 \
-  	-co BIGTIFF=YES -t_srs EPSG:3857 -r lanczos \
-  	temp/$BASE data/hillshade/$BASE
-   gdaladdo -r average --config COMPRESS_OVERVIEW DEFLATE \
-  	--config PREDICTOR_OVERVIEW 2 \
-  	data/hillshade/$BASE 2 5 8 16 32
-   rm temp/*
-  done
-  gdalbuildvrt data/hillshade.vrt data/hillshade/*.tif
-}
+echo "Downloading OSM Water Polygons"
+mkdir -pv data/osm
+if [[ ! -f data/osm/water-polygons-split-3857.zip ]] ; then
+  wget -P data/osm http://data.openstreetmapdata.com/water-polygons-split-3857.zip
+else
+  echo "water-polygons-split-3857.zip exists. Skipping download"
+fi
 
 
-#### Contour lines
-function generate_contours {
-  echo "Generating contours"
-  # (50 ft = 15.24 m)
-  for f in data/ned13/*.tif ; do
-   BASE=`basename $f .tif`
-   gdal_contour -a ele $f temp/$BASE.shp -i 15.24
-   ogr2ogr -t_srs EPSG:3857 temp/${BASE}_3857.shp temp/$BASE.shp
-  done
-
-  echo "Importing contours"
-  # create table
-  echo "DROP TABLE IF EXISTS $CONTOURS_TABLE" | $DBCMD
-  shp2pgsql -s 3857 -p -g way -I `ls temp/*_3857.shp | head -n 1` $CONTOURS_TABLE | $DBCMD
-  # import data
-  for f in temp/*_3857.shp ; do
-   shp2pgsql -s 3857 -a -g way $f $CONTOURS_TABLE | $DBCMD
-  done
-  # remove ugly contours around seashores
-  echo "DELETE FROM $CONTOURS_TABLE WHERE ele = 0" | $DBCMD
-  # simplify
-  echo "UPDATE $CONTOURS_TABLE SET way = ST_Simplify(way, 1.0);" | $DBCMD
-  # add ele_ft column
-  echo "ALTER TABLE $CONTOURS_TABLE ADD COLUMN ele_ft INT;" | $DBCMD
-  echo "UPDATE $CONTOURS_TABLE SET ele_ft = CAST(ele * 3.28085 AS INT) WHERE ele_ft IS NULL" | $DBCMD
-  rm temp/*
-
-  echo "Analyzing contours table"
-  echo "VACUUM ANALYZE $CONTOURS_TABLE" | $DBCMD
-}
-
-
-#### OSM Water Polygons
-function get_water_polygons {
-  echo "Downloading OSM Water Polygons"
-  mkdir -pv data/osm
-  if [[ ! -f data/osm/water-polygons-split-3857.zip ]] ; then
-   wget -P data/osm http://data.openstreetmapdata.com/water-polygons-split-3857.zip
-  fi
-  unzip -j data/osm/water-polygons-split-3857.zip -d data/osm
-  shapeindex data/osm/water_polygons.shp
-}
-
-
-#### NHD
-#
+echo "Download NHD High Resolution"
 # NOTE: This downloads ALL subregions, since there is no simple way to
 # calculate which ones are needed. They are cropped to the relevant
 # region before importing, however.
-function get_nhd {
-  echo "Downloading NHD High Resolution"
-  mkdir -pv data/nhd/hi
-  NHDURLS=`wget -O - ftp://nhdftp.usgs.gov/DataSets/Staged/SubRegions/FileGDB/HighResolution/ | egrep -o -E "ftp://nhdftp.usgs.gov:21/DataSets/Staged/SubRegions/FileGDB/HighResolution/NHDH...._931v220\.zip"`
-  #echo $NHDURLS
-  for url in $NHDURLS ; do
-    BASE=`basename $url .zip`
-    DEST=data/nhd/hi/$BASE.gdb.zip
-    echo $BASE
-    if [[ ! -f data/nhd/hi/$BASE.gdb.zip ]] ; then
-      wget -O data/nhd/hi/$BASE.gdb.zip "$url"
-    else
-     echo $DEST exists. Skipping download.
-    fi
-  done
-}
-
-function process_nhd {
-  for f in data/nhd/hi/NHDH*.gdb.zip ; do
-    BASE=`basename $f .gdb.zip`
-    # Extract relevant layers as shapefiles, clip to extent
-    ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:3857 \
-      -clipdst $XMINM $YMINM $XMAXM $YMAXM \
-      temp/$BASE $f NHDPoint NHDFlowline NHDLine NHDArea NHDWaterbody
-  done
-}
-
-function import_nhd_table {
-  TYPE=$1 ; if [[ -z $1 ]] ; then
-    echo "No type (Area, Flowline, Line, Point, Waterbody) specified"
-    return 1
+mkdir -pv data/nhd/hi
+NHDURLS=`wget -O - ftp://nhdftp.usgs.gov/DataSets/Staged/SubRegions/FileGDB/HighResolution/ | egrep -o -E "ftp://nhdftp.usgs.gov:21/DataSets/Staged/SubRegions/FileGDB/HighResolution/NHDH...._931v220\.zip"`
+for url in $NHDURLS ; do
+  BASE=`basename $url .zip`
+  DEST=data/nhd/hi/$BASE.gdb.zip
+  echo $BASE
+  if [[ ! -f $DEST ]] ; then
+    wget -O $DEST "$url"
+  else
+    echo $DEST exists. Skipping download.
   fi
-  TABLE="${NHD_TABLE_PREFIX}_$TYPE"
-  echo "Importing $TABLE"
-  echo "DROP TABLE IF EXISTS $TABLE" | $DBCMD
-  echo "DROP INDEX IF EXISTS ${TABLE}_idx_fcode" | $DBCMD
-  shp2pgsql -s 3857 -p -g way -I `ls temp/NHDH*v220/NHD${TYPE}.shp | head -n 1` $TABLE | $DBCMD
-  for f in temp/NHDH*/NHD${TYPE}.shp ; do
-   echo $f
-   shp2pgsql -s 3857 -a -g way $f $TABLE | $DBCMD
-  done
-}
-
-function nhd_postprocess {
-  echo "Creating fcode indexes..."
-  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_waterbody_idx_wetlands ON ${NHD_TABLE_PREFIX}_waterbody USING gist(way) WHERE fcode IN (46600,46601,46602);" | $DBCMD
-  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_flowline_idx_perennialStream ON ${NHD_TABLE_PREFIX}_flowline USING gist(way) WHERE fcode IN (33400,33600,33601,46000,46006);" | $DBCMD
-  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_flowline_idx_intermittentStream ON ${NHD_TABLE_PREFIX}_flowline USING gist(way) WHERE fcode IN (46003,46007);" | $DBCMD
-  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_area_idx_waterpoly ON ${NHD_TABLE_PREFIX}_area USING gist(way) WHERE fcode IN (46000,46003,46006);" | $DBCMD
-  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_waterbody_idx_waterpoly ON ${NHD_TABLE_PREFIX}_waterbody USING gist(way) WHERE fcode NOT IN (36100,37800,46600,46601,46602,49300);" | $DBCMD
-  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_flowline_idx_rivercenterline ON ${NHD_TABLE_PREFIX}_flowline USING gist(way) WHERE fcode = 55800;" | $DBCMD
-
-  echo "Analyzing..."
-  echo "VACUUM ANALYZE ${NHD_TABLE_PREFIX}_area" | $DBCMD
-  echo "VACUUM ANALYZE ${NHD_TABLE_PREFIX}_flowline" | $DBCMD
-  echo "VACUUM ANALYZE ${NHD_TABLE_PREFIX}_line" | $DBCMD
-  echo "VACUUM ANALYZE ${NHD_TABLE_PREFIX}_point" | $DBCMD
-  echo "VACUUM ANALYZE ${NHD_TABLE_PREFIX}_waterbody" | $DBCMD
-}
-
-function nhd_all {
-  get_nhd
-  process_nhd
-  import_nhd_table Area
-  import_nhd_table Flowline
-  import_nhd_table Line
-  import_nhd_table Point
-  import_nhd_table Waterbody
-  nhd_postprocess
-}
-
-
-#### By default, download and process all required data.
-#### Comment out, or run functions manually, as needed.
-
-function get_all_data {
-  get_nlcd_canopy
-  get_ned
-  generate_hillshade
-  generate_contours
-  get_water_polygons
-  nhd_all
-}
+done

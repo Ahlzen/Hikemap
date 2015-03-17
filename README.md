@@ -45,7 +45,7 @@ sudo get_google_font alegreya alegreyasans alegreyasanssc
 
 #### Configure environment ####
 
-Edit the `config` file and change the settings to match your environment. You can adjust the map extents here, which determines the area for which data is downloaded and rendered.
+Edit the `config` file and change the settings to match your environment. You can adjust the map extents here, which determines the area for which data is downloaded and rendered, as well as zoom levels to render.
 
 
 #### Data Sources ####
@@ -58,15 +58,12 @@ Hikemap uses the following data sources:
 * National Land Cover Tree Canopy Data - tree coverage
 * OSM Water Polygons - aids ocean rendering
 
-A script, `get_data`, contains functions to download and pre-process this data. You can download and process all required data (except OSM) like so:
+Run the `get_data` script to download above data files for the configured area. The `process_data` script will perform the necessary reprojection, image processing and generation/import of vector features. Make sure you have plenty of disk space.
 
 ```
-source get_data
-get_all_data
+get_data
+process_data
 ```
-
-This may take a while, both the download and processing. Make sure you have plenty of disk space.
-
 
 #### OSM Data Import ####
 
@@ -85,7 +82,7 @@ osm2pgsql -c -s -p $OSM_TABLE_PREFIX --drop -S hikemap.style --keep-coastlines -
 
 ## Processing Sources ##
 
-The `process_sources` script builds the mapnik XML style files and a tilestache.conf from the source files under `sources/`.
+The `process_sources` script builds the mapnik XML style files and tilestache.conf from the source files under `sources/`.
 
 
 #### Testing ####

@@ -1,0 +1,217 @@
+#!/bin/bash
+set -e
+source ./config
+mkdir -pv temp
+
+
+#### NLCD Canopy
+
+function process_nlcd_canopy {
+  echo "Processing NLCD 2011 Tree Canopy (cartographic)"
+  mkdir -pv processed/canopy
+  CANOPYFILE="data/canopy/`basename $CANOPYURL`"
+  if [[ ! -f $CANOPYFILE ]] ; then
+    echo "$CANOPYFILE not available. Skipping"
+    #return 1
+  fi
+
+  echo "Unzipping NCLD"
+  unzip -j $CANOPYFILE -d temp
+
+  echo "Converting NLCD to GeoTIFF"
+  gdal_translate -of GTiff \
+    temp/nlcd2011_usfs_treecanopy_cartographic_3-31-2014.img \
+    temp/nlcd2011canopy.tif
+
+  echo "Creating VRT with custom grayscale colortable"  
+  gdalbuildvrt temp/nlcd2011canopy_orig.vrt temp/nlcd2011canopy.tif
+  echo "<ColorTable>" > temp/colortable_gray
+  for n in `seq 0 100` ; do
+    # (this tretches the 0-100 range to 0-255)
+    V=$(($n * 255 / 100))
+    echo "<Entry c1=\"$V\" c2=\"$V\" c3=\"$V\" c4=\"255\" />" \
+      >> temp/colortable_gray
+  done
+  for n in `seq 101 255` ; do
+    echo '<Entry c1="255" c2="255" c3="255" c4="255" />' \
+      >> temp/colortable_gray
+  done
+  echo "</ColorTable>" >> temp/colortable_gray
+  cat temp/nlcd2011canopy_orig.vrt | sed \
+    -e "/<ColorTable>/ d" \
+    -e "/<Entry .*\/>/ d" \
+    -e "/<\/ColorTable>/ {
+    r temp/colortable_gray
+    d
+    }" > "temp/nlcd2011canopyGray.vrt"
+
+  echo "Expanding indexed image to grayscale"
+  gdal_translate -co BIGTIFF=YES -expand gray \
+    temp/nlcd2011canopyGray.vrt temp/nlcd2011canopyGray.tif
+
+  echo "Reprojecting to 3857"
+  gdalwarp -t_srs EPSG:3857 -r bilinear \
+   -co COMPRESS=DEFLATE -co ZLEVEL=9 -co PREDICTOR=2 \
+   -co TILED=YES -co BIGTIFF=YES -multi \
+   temp/nlcd2011canopyGray.tif processed/canopy/nlcd2011canopyGrayTiled.tif
+
+  echo "Adding overviews"
+  gdaladdo --config COMPRESS_OVERVIEW DEFLATE \
+    --config PREDICTOR_OVERVIEW 2 \
+    --config BIGTIFF_OVERVIEW YES \
+    processed/canopy/nlcd2011canopyGrayTiled.tif 2 4 8 16 32
+      
+  rm temp/*
+}
+
+
+#### NED 1/3
+
+function process_ned {
+  mkdir -pv processed/ned13
+  echo "Converting NED to GeoTIFF"
+  for f in data/ned13/*.zip ; do
+    BASE=`basename $f .zip`
+    DEST="processed/ned13/$BASE.tif"
+    if [[ ! -f $DEST ]] ; then
+      unzip $f -d temp
+      gdal_translate -of GTiff temp/img${BASE}_13.img $DEST
+      rm -Rf temp/*
+    fi
+  done
+}
+
+function generate_hillshade {
+  echo "Generating hillshade"
+  mkdir -pv processed/hillshade
+  for f in processed/ned13/*.tif ; do
+    BASE=`basename $f`
+    gdaldem hillshade -z 1.5 -s 111120 -az 325 \
+      $f temp/$BASE -of GTiff
+    gdalwarp -co COMPRESS=DEFLATE -co ZLEVEL=9 -co PREDICTOR=2 \
+      -co BIGTIFF=YES -t_srs EPSG:3857 -r lanczos \
+      temp/$BASE processed/hillshade/$BASE
+    gdaladdo -r average --config COMPRESS_OVERVIEW DEFLATE \
+      --config PREDICTOR_OVERVIEW 2 \
+      processed/hillshade/$BASE 2 5 8 16 32
+    rm temp/*
+  done
+  gdalbuildvrt processed/hillshade/hillshade.vrt processed/hillshade/*.tif
+}
+
+function generate_contours {
+  echo "Generating contours..."
+  # (50 ft = 15.24 m)
+  for f in processed/ned13/*.tif ; do
+    BASE=`basename $f .tif`
+    gdal_contour -a ele $f temp/$BASE.shp -i 15.24
+    ogr2ogr -t_srs EPSG:3857 temp/${BASE}_3857.shp temp/$BASE.shp
+  done
+
+  echo "Importing contours..."
+  echo "DROP TABLE IF EXISTS $CONTOURS_TABLE" | $DBCMD
+  shp2pgsql -s 3857 -p -g way -I `ls temp/*_3857.shp | head -n 1` \
+    $CONTOURS_TABLE | $DBCMD
+  for f in temp/*_3857.shp ; do
+    shp2pgsql -s 3857 -a -g way $f $CONTOURS_TABLE | $DBCMD
+  done
+
+  echo "Removing ugly contours around seashores..."
+  echo "DELETE FROM $CONTOURS_TABLE WHERE ele = 0" | $DBCMD
+
+  echo "Simplifying..."
+  echo "UPDATE $CONTOURS_TABLE SET way = ST_Simplify(way, 1.0);" | $DBCMD
+
+  echo "Calculating ele_ft column..."
+  echo "ALTER TABLE $CONTOURS_TABLE ADD COLUMN ele_ft INT;" | $DBCMD
+  echo "UPDATE $CONTOURS_TABLE SET ele_ft = CAST(ele * 3.28085 AS INT)" \
+    "WHERE ele_ft IS NULL" | $DBCMD
+
+  echo "Analyzing contours table..."
+  echo "VACUUM ANALYZE $CONTOURS_TABLE" | $DBCMD
+
+  echo "Cleaning up..."
+  rm temp/*
+}
+
+
+## OSM Water Polygons
+
+function process_water_polygons {
+  mkdir -pv processed/osm
+  if [[ ! -f data/osm/water-polygons-split-3857.zip ]] ; then
+    echo "OSM Water Polygons file not available. Skipping."
+    return 1
+  fi
+
+  echo "Unzipping OSM Water Polygons..."
+  unzip -j data/osm/water-polygons-split-3857.zip -d processed/osm
+
+  echo "Indexing OSM Water Polygons..."
+  shapeindex processed/osm/water_polygons.shp
+}
+
+
+#### NHD
+
+function process_nhd {
+  for f in data/nhd/hi/NHDH*.gdb.zip ; do
+    BASE=`basename $f .gdb.zip`
+    # Extract relevant layers as shapefiles, clip to extent
+    ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:3857 \
+      -clipdst $XMINM $YMINM $XMAXM $YMAXM \
+      temp/$BASE $f NHDPoint NHDFlowline NHDLine NHDArea NHDWaterbody
+  done
+}
+
+function import_nhd_table {
+  TYPE=$1 ; if [[ -z $1 ]] ; then
+    echo "No type (Area, Flowline, Line, Point, Waterbody) specified"
+    return 1
+  fi
+  TABLE="${NHD_TABLE_PREFIX}_$TYPE"
+  echo "Importing $TABLE"
+  echo "DROP TABLE IF EXISTS $TABLE" | $DBCMD
+  echo "DROP INDEX IF EXISTS ${TABLE}_idx_fcode" | $DBCMD
+  shp2pgsql -s 3857 -p -g way -I \
+    `ls temp/NHDH*v220/NHD${TYPE}.shp | head -n 1` $TABLE | $DBCMD
+  for f in temp/NHDH*/NHD${TYPE}.shp ; do
+    echo $f
+    shp2pgsql -s 3857 -a -g way $f $TABLE | $DBCMD
+  done
+}
+
+function nhd_postprocess {
+  echo "Creating fcode indexes..."
+  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_waterbody_idx_wetlands ON ${NHD_TABLE_PREFIX}_waterbody USING gist(way) WHERE fcode IN (46600,46601,46602);" | $DBCMD
+  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_flowline_idx_perennialStream ON ${NHD_TABLE_PREFIX}_flowline USING gist(way) WHERE fcode IN (33400,33600,33601,46000,46006);" | $DBCMD
+  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_flowline_idx_intermittentStream ON ${NHD_TABLE_PREFIX}_flowline USING gist(way) WHERE fcode IN (46003,46007);" | $DBCMD
+  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_area_idx_waterpoly ON ${NHD_TABLE_PREFIX}_area USING gist(way) WHERE fcode IN (46000,46003,46006);" | $DBCMD
+  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_waterbody_idx_waterpoly ON ${NHD_TABLE_PREFIX}_waterbody USING gist(way) WHERE fcode NOT IN (36100,37800,46600,46601,46602,49300);" | $DBCMD
+  echo "CREATE INDEX ${NHD_TABLE_PREFIX}_flowline_idx_rivercenterline ON ${NHD_TABLE_PREFIX}_flowline USING gist(way) WHERE fcode = 55800;" | $DBCMD
+
+  echo "Analyzing..."
+  echo "VACUUM ANALYZE ${NHD_TABLE_PREFIX}_area" | $DBCMD
+  echo "VACUUM ANALYZE ${NHD_TABLE_PREFIX}_flowline" | $DBCMD
+  echo "VACUUM ANALYZE ${NHD_TABLE_PREFIX}_line" | $DBCMD
+  echo "VACUUM ANALYZE ${NHD_TABLE_PREFIX}_point" | $DBCMD
+  echo "VACUUM ANALYZE ${NHD_TABLE_PREFIX}_waterbody" | $DBCMD
+}
+
+
+
+#### By default, we process all needed data.
+#### Comment out (or run functions manually) as needed.
+
+process_nlcd_canopy
+process_ned
+generate_hillshade
+generate_contours
+process_water_polygons
+process_nhd
+import_nhd_table Area
+import_nhd_table Flowline
+import_nhd_table Line
+import_nhd_table Point
+import_nhd_table Waterbody
+nhd_postprocess

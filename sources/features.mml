@@ -63,7 +63,7 @@
       "srs": "${EPSG3857}",
       "Datasource": {
         "type": "shape",
-        "file": "../data/osm/water_polygons.shp"
+        "file": "osm/water_polygons.shp"
       }},
     {
       "name": "parks",
