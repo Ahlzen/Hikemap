@@ -7,7 +7,7 @@ echo "Downloading NLCD 2011 Tree Canopy (cartographic)"
 mkdir -pv data/canopy
 CANOPYFILE="data/canopy/`basename $CANOPYURL`"
 if [[ ! -f $CANOPYFILE ]] ; then
-  wget -P data/canopy $URL
+  wget -P data/canopy $CANOPYURL
 else
   echo $CANOPYFILE exists. Skipping download.
 fi
