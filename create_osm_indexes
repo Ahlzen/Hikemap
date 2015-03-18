@@ -3,32 +3,32 @@
 . config
 
 # Railroads
-echo "CREATE INDEX idx_line_rail ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE (railway IS NOT NULL);" | $DBCMD
+echo "CREATE INDEX ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE (railway IS NOT NULL);" | $DBCMD
 
 # Roads
-echo "CREATE INDEX idx_line_roads ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE highway IN ('motorway','trunk','primary','secondary','tertiary','residential','unclassified','service','motorway_link','primary_link','secondary_link','tertiary_link');" | $DBCMD
+echo "CREATE INDEX ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE highway IN ('motorway','trunk','primary','secondary','tertiary','residential','unclassified','service','motorway_link','primary_link','secondary_link','tertiary_link');" | $DBCMD
 
 # Trails
-echo "CREATE INDEX idx_line_trails ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE highway IN ('track', 'bridleway', 'footway', 'path', 'pedestrian', 'cycleway');" | $DBCMD
+echo "CREATE INDEX ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE highway IN ('track', 'bridleway', 'footway', 'path', 'pedestrian', 'cycleway');" | $DBCMD
 echo "CREATE INDEX idx_line_trailnetworks ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE route = 'hiking';" | $DBCMD
 
 # Coastline
-echo "CREATE INDEX idx_line_coastline ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE \"natural\" = 'coastline'" | $DBCMD
+echo "CREATE INDEX ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE \"natural\" = 'coastline'" | $DBCMD
 
 # Places
-echo "CREATE INDEX idx_point_places ON ${OSM_TABLE_PREFIX}_point USING gist(way) WHERE place IS NOT NULL AND name IS NOT NULL;" | $DBCMD
+echo "CREATE INDEX ON ${OSM_TABLE_PREFIX}_point USING gist(way) WHERE place IS NOT NULL AND name IS NOT NULL;" | $DBCMD
 
 # Natural
-echo "CREATE INDEX idx_point_peaks ON ${OSM_TABLE_PREFIX}_point USING gist(way) WHERE \"natural\" = 'peak'" | $DBCMD
+echo "CREATE INDEX ON ${OSM_TABLE_PREFIX}_point USING gist(way) WHERE \"natural\" = 'peak'" | $DBCMD
 
 # State borders
-echo "CREATE INDEX idx_line_stateborders ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE \"boundary\" = 'administrative' AND admin_level='4'" | $DBCMD
+echo "CREATE INDEX ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE \"boundary\" = 'administrative' AND admin_level='4'" | $DBCMD
 
 # Parks etc
-echo "CREATE INDEX idx_poly_parks ON ${OSM_TABLE_PREFIX}_polygon USING gist(way) WHERE landuse IN ('forest','vineyard','conservation','recreation_ground','village_green','cemetery') OR leisure IN ('nature_reserve','park','common','recreation_ground','playground','garden','golf course')" | $DBCMD
+echo "CREATE INDEX ON ${OSM_TABLE_PREFIX}_polygon USING gist(way) WHERE landuse IN ('forest','vineyard','conservation','recreation_ground','village_green','cemetery') OR leisure IN ('nature_reserve','park','common','recreation_ground','playground','garden','golf course')" | $DBCMD
 
 # Transport shields/labels
-echo "CREATE INDEX idx_line_transportlabels ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE highway IN ('motorway','trunk','primary','secondary','tertiary','residential','unclassified') OR railway IN ('rail','light_rail','preserved','subway','tram','funicular','monorail')" | $DBCMD
+echo "CREATE INDEX ON ${OSM_TABLE_PREFIX}_line USING gist(way) WHERE highway IN ('motorway','trunk','primary','secondary','tertiary','residential','unclassified') OR railway IN ('rail','light_rail','preserved','subway','tram','funicular','monorail')" | $DBCMD
 
 # Special landcover (natural=*)
-echo "CREATE INDEX idx_poly_cover ON ${OSM_TABLE_PREFIX}_polygon USING gist(way) WHERE \"natural\" IN ('rock','bare_rock','cliff','scree')" | $DBCMD
+echo "CREATE INDEX ON ${OSM_TABLE_PREFIX}_polygon USING gist(way) WHERE \"natural\" IN ('rock','bare_rock','cliff','scree')" | $DBCMD
