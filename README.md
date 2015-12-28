@@ -36,7 +36,7 @@ TODO
 Hikemap uses a few high-quality open font families that are available from [Google Fonts](https://www.google.com/fonts). I have included a script that downloads and installs font families directly from Google Fonts:
 
 ```
-sudo get_google_font alegreya alegreyasans alegreyasanssc
+sudo ./get_google_font alegreya alegreyasans alegreyasanssc
 ```
 
 
@@ -90,7 +90,7 @@ The `process_sources` script builds the mapnik XML style files and tilestache.co
 TileStache comes with a simple server that you can use to test the supplied tilestache.conf:
 
 ```
-tilestache-server.py --config=processed/tilestache.conf
+tilestache-server --config=processed/tilestache.cfg
 ```
 
 The [tilestache documentation](http://tilestache.org/doc/) describes how to serve tiles using web servers more suitable for production.
