@@ -66,15 +66,16 @@
 
 #parks [zoom >= 10] {
   ::borderHalo {
-      line-width: 3;
-      line-offset: -1.5;
-      [zoom = 14] { line-width: 4; line-offset: -2; }
-      [zoom>= 15] { line-width: 5; line-offset: -2.5; }
+      line-width: 4;
+      line-offset: -2;
+      [zoom = 14] { line-width: 6; line-offset: -3; }
+      [zoom>= 15] { line-width: 8; line-offset: -4; }
       line-color: @parkcolor;
-      line-opacity: 0.4;
+      line-opacity: 0.15;
   }
-  line-width: 1.0;
-  [zoom >= 13] { line-width: 1.5; }
+  line-width: 0.5;
+  line-opacity: 0.5;
+  [zoom >= 13] { line-width: 0.8; }
   line-color: @parkcolor;
 }
  
