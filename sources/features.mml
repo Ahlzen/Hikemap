@@ -43,11 +43,11 @@
         "table": "(SELECT way FROM ${NHD_TABLE_PREFIX}_flowline WHERE fcode IN (46003,46007)) AS f"
       }},
     { "name": "nhdWaterPoly",
-      "id": "nhdPerennialWaterPoly",
+      "id": "nhdWaterPoly",
       "srs": "${EPSG3857}",
       "Datasource": {
         ${DBSETTINGS},
-        "table": "((SELECT way, fcode FROM ${NHD_TABLE_PREFIX}_area WHERE fcode IN (46000,46003,46006)) UNION (SELECT way, fcode FROM ${NHD_TABLE_PREFIX}_waterbody WHERE NOT fcode IN (36100,37800,46600,46601,46602,49300))) AS f"
+        "table": "((SELECT way,fcode FROM ${NHD_TABLE_PREFIX}_area WHERE fcode IN (46000,46003,46006)) UNION (SELECT way,fcode FROM ${NHD_TABLE_PREFIX}_waterbody WHERE NOT fcode IN (36100,37800,46600,46601,46602,49300))) AS f"
       }},
     {
       "name": "coastline",
