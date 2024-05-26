@@ -10,11 +10,18 @@ In part based on earlier work from
 
 ## Requirements ##
 
-For Debian/Ubuntu based systems, these packages will get you most of the way:
+* postgresql with postgis
+* tilestache (with python3 support)
+* python3 with numpy, scipy, pil
+* nodejs and carto, blit
 
-`postgresql postgresql-client postgresql-9.3-postgis-2.1 postgis wget tilestache python-numpy python-scipy python-pil proj-bin libmapnik2.2 mapnik-utils node-carto unzip parallel fonts-dejavu fonts-dejavu-extra fonts-liberation fonts-sil-gentium fonts-sil-gentium-basic fonts-larabie-straight`
 
-(`postgresql` and `postgis` versions may depend on your distro)
+For Ubuntu 22.04 LTS, these packages get you most of the way:
+
+`sudo apt install postgresql postgresql-client postgresql-14-postgis-3 postgis wget python3-numpy python3-scipy python3-pil proj-bin libmapnik3.1 mapnik-utils unzip parallel fonts-dejavu fonts-dejavu-extra fonts-liberation fonts-sil-gentium fonts-sil-gentium-basic fonts-larabie-straight nodejs npm`
+
+`sudo npm install -g carto`
+
 
 
 #### GDAL/OGR ####
@@ -28,16 +35,22 @@ TODO.
 
 Required for certain tilestache providers. Install with NPM.
 
-TODO
+`sudo npm install -g blit`
 
 
 #### Google Fonts ####
 
-Hikemap uses a few high-quality open font families that are available from [Google Fonts](https://www.google.com/fonts). I have included a script that downloads and installs font families directly from Google Fonts:
+Hikemap uses a few high-quality open font families available from [Google Fonts](https://www.google.com/fonts):
 
-```
-sudo ./get_google_font alegreya alegreyasans alegreyasanssc
-```
+* Alegreya
+* Alegreya Small Caps
+* Alegreya Sans
+* Alegreya Sans Small Caps
+
+Install with a font manager like fnt, or download from [Google Fonts on Github](https://github.com/google/fonts)
+
+
+(by default Mapnik expects .ttf files under /usr/share/fonts/truetype)
 
 
 ## Download and Process Data ##
