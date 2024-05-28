@@ -1,8 +1,13 @@
 # Map extents (in whole degrees)
-export XMIN=-73
-export XMAX=-70
-export YMIN=43
+#export XMIN=-73
+#export XMAX=-70
+#export YMIN=43
+#export YMAX=45
+export XMIN=-72
+export XMAX=-71
+export YMIN=44
 export YMAX=45
+
 
 # Database settings
 export DB_HOST="localhost"
@@ -13,7 +18,7 @@ export DB_NAME="gis"
 export CONTOURS_TABLE="hikemap_contours50ft"
 
 # Table prefix for OSM data
-export OSM_TABLE_PREFIX="osm_ne"
+export OSM_TABLE_PREFIX="hikemap_osm"
 
 # Table prefix for NHD data
 export NHD_TABLE_PREFIX="hikemap_nhd"
@@ -29,7 +34,7 @@ export ZMAX=15
 #### These should not normally need to be changed
 
 # Download URL for NED 1/3' data (printf style)
-export NED13URL="ftp://rockyftp.cr.usgs.gov/vdelivery/Datasets/Staged/NED/13/IMG/n%dw%03d.zip"
+export NED13URL="https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n%02dw%03d/USGS_13_n%02dw%03d.tif"
 
 # Download URL for NLCD 2011 Tree Canopy (cartographic edition)
 export CANOPYURL="http://toposm.ahlzen.com/data/nlcd_2011_USFS_tree_canopy_2011_edition_2014_03_31_cartographic.zip"

@@ -67,24 +67,24 @@ function process_nlcd_canopy {
 
 #### NED 1/3
 
-function process_ned {
-  mkdir -pv processed/ned13
-  echo "Converting NED to GeoTIFF"
-  for f in data/ned13/*.zip ; do
-    BASE=`basename $f .zip`
-    DEST="processed/ned13/$BASE.tif"
-    if [[ ! -f $DEST ]] ; then
-      unzip $f -d temp
-      gdal_translate -of GTiff temp/img${BASE}_13.img $DEST
-      rm -Rf temp/*
-    fi
-  done
-}
+#function process_ned {
+#  mkdir -pv processed/ned13
+#  echo "Converting NED to GeoTIFF"
+#  for f in data/ned13/*.zip ; do
+#    BASE=`basename $f .zip`
+#    DEST="processed/ned13/$BASE.tif"
+#    if [[ ! -f $DEST ]] ; then
+#      unzip $f -d temp
+#      gdal_translate -of GTiff temp/img${BASE}_13.img $DEST
+#      rm -Rf temp/*
+#    fi
+#  done
+#}
 
 function generate_hillshade {
   echo "Generating hillshade"
   mkdir -pv processed/hillshade
-  for f in processed/ned13/*.tif ; do
+  for f in data/ned13/*.tif ; do
     BASE=`basename $f`
     gdaldem hillshade -z 1.5 -s 111120 -az 325 \
       $f temp/$BASE -of GTiff
@@ -102,7 +102,7 @@ function generate_hillshade {
 function generate_contours {
   echo "Generating contours..."
   # (50 ft = 15.24 m)
-  for f in processed/ned13/*.tif ; do
+  for f in data/ned13/*.tif ; do
     BASE=`basename $f .tif`
     gdal_contour -a ele $f temp/$BASE.shp -i 15.24
     ogr2ogr -t_srs EPSG:3857 temp/${BASE}_3857.shp temp/$BASE.shp
@@ -154,14 +154,17 @@ function process_water_polygons {
 
 #### NHD
 
+#function process_nhd {
+#  for f in data/nhd/hi/NHDH*.gdb.zip ; do
+#    BASE=`basename $f .gdb.zip`
+#    # Extract relevant layers as shapefiles, clip to extent
+#    ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:3857 \
+#      -clipdst $XMINM $YMINM $XMAXM $YMAXM \
+#      temp/$BASE $f NHDPoint NHDFlowline NHDLine NHDArea NHDWaterbody
+#  done
+#}
 function process_nhd {
-  for f in data/nhd/hi/NHDH*.gdb.zip ; do
-    BASE=`basename $f .gdb.zip`
-    # Extract relevant layers as shapefiles, clip to extent
-    ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:3857 \
-      -clipdst $XMINM $YMINM $XMAXM $YMAXM \
-      temp/$BASE $f NHDPoint NHDFlowline NHDLine NHDArea NHDWaterbody
-  done
+  unzip data/nhd/NHD_H_National_GDB.zip -d temp
 }
 
 function import_nhd_table {
@@ -169,16 +172,24 @@ function import_nhd_table {
     echo "No type (Area, Flowline, Line, Point, Waterbody) specified"
     return 1
   fi
+  SRC_LAYER="NHD$TYPE"
   TABLE="${NHD_TABLE_PREFIX}_$TYPE"
   echo "Importing $TABLE"
   echo "DROP TABLE IF EXISTS $TABLE" | $DBCMD
   echo "DROP INDEX IF EXISTS ${TABLE}_idx_fcode" | $DBCMD
-  shp2pgsql -s 3857 -p -g way -I \
-    `ls temp/NHDH*v220/NHD${TYPE}.shp | head -n 1` $TABLE | $DBCMD
-  for f in temp/NHDH*/NHD${TYPE}.shp ; do
-    echo $f
-    shp2pgsql -s 3857 -a -g way $f $TABLE | $DBCMD
-  done
+  #shp2pgsql -s 3857 -p -g way -I \
+  #  `ls temp/NHDH*v220/NHD${TYPE}.shp | head -n 1` $TABLE | $DBCMD
+  ogr2ogr -f "PostgreSQL" PG:"dbname=gis" -t_srs EPSG:3857 \
+    -clipdst $XMINM $YMINM $XMAXM $YMAXM \
+    -lco SPATIAL_INDEX=GIST -lco GEOMETRY_NAME=way -forceNullable \
+    -nlt PROMOTE_TO_MULTI \
+    temp/NHD_H_National_GDB.gdb \
+    -nln $TABLE \
+    $SRC_LAYER
+  #for f in temp/NHDH*/NHD${TYPE}.shp ; do
+  #  echo $f
+  #  shp2pgsql -s 3857 -a -g way $f $TABLE | $DBCMD
+  #done
 }
 
 function nhd_postprocess {
@@ -203,15 +214,15 @@ function nhd_postprocess {
 #### By default, we process all needed data.
 #### Comment out (or run functions manually) as needed.
 
-process_nlcd_canopy
-process_ned
-generate_hillshade
-generate_contours
-process_water_polygons
-process_nhd
+#process_nlcd_canopy
+#process_ned # obsolete
+#generate_hillshade
+#generate_contours
+#process_water_polygons
+#process_nhd
 import_nhd_table Area
 import_nhd_table Flowline
 import_nhd_table Line
 import_nhd_table Point
 import_nhd_table Waterbody
-nhd_postprocess
+#nhd_postprocess

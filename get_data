@@ -11,13 +11,13 @@ if [[ ! -f $CANOPYFILE ]] ; then
 else
   echo $CANOPYFILE exists. Skipping download.
 fi
-
+echo
 
 echo "Downloading NED data"
 mkdir -pv data/ned13
 for x in `seq $[-XMAX+1] $[-XMIN]` ; do
   for y in `seq $[YMIN+1] $[YMAX]` ; do
-    URL=`printf $NED13URL $y $x`
+    URL=`printf $NED13URL $y $x $y $x`
     FILENAME="data/ned13/`basename $URL`"
     if [[ ! -f $FILENAME ]] ; then
       wget -P data/ned13 $URL
@@ -26,15 +26,16 @@ for x in `seq $[-XMAX+1] $[-XMIN]` ; do
     fi
   done
 done
-
+echo
 
 echo "Downloading OSM Water Polygons"
 mkdir -pv data/osm
 if [[ ! -f data/osm/water-polygons-split-3857.zip ]] ; then
-  wget -P data/osm http://data.openstreetmapdata.com/water-polygons-split-3857.zip
+  wget -P data/osm https://osmdata.openstreetmap.de/download/water-polygons-split-3857.zip
 else
   echo "water-polygons-split-3857.zip exists. Skipping download"
 fi
+echo
 
 
 echo "Download NHD High Resolution"
@@ -42,14 +43,20 @@ echo "Download NHD High Resolution"
 # calculate which ones are needed. They are cropped to the relevant
 # region before importing, however.
 mkdir -pv data/nhd/hi
-NHDURLS=`wget -O - ftp://nhdftp.usgs.gov/DataSets/Staged/SubRegions/FileGDB/HighResolution/ | egrep -o -E "ftp://nhdftp.usgs.gov:21/DataSets/Staged/SubRegions/FileGDB/HighResolution/NHDH...._931v220\.zip"`
-for url in $NHDURLS ; do
-  BASE=`basename $url .zip`
-  DEST=data/nhd/hi/$BASE.gdb.zip
-  echo $BASE
-  if [[ ! -f $DEST ]] ; then
-    wget -O $DEST "$url"
-  else
-    echo $DEST exists. Skipping download.
-  fi
-done
+if [[ ! -f data/nhd/NHD_H_National_GDB.zip ]] ; then
+  wget -P data/nhd https://prd-tnm.s3.amazonaws.com/StagedProducts/Hydrography/NHD/National/GDB/NHD_H_National_GDB.zip
+else
+  echo "NHD data exists. Skipping download."
+fi
+
+#NHDURLS=`wget -O - ftp://nhdftp.usgs.gov/DataSets/Staged/SubRegions/FileGDB/HighResolution/ | egrep -o -E "ftp://nhdftp.usgs.gov:21/DataSets/Staged/SubRegions/FileGDB/HighResolution/NHDH...._931v220\.zip"`
+#for url in $NHDURLS ; do
+#  BASE=`basename $url .zip`
+#  DEST=data/nhd/hi/$BASE.gdb.zip
+#  echo $BASE
+#  if [[ ! -f $DEST ]] ; then
+#    wget -O $DEST "$url"
+#  else
+#    echo $DEST exists. Skipping download.
+#  fi
+#done
