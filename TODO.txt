@@ -1,0 +1,5 @@
+* Configure and set up tilestache-server.py
+* Try pngquant for 8-bpp png tiles
+* Fix some cartography issues (typography, etc)
+* Try NHDPlus HR hydro data
+
