@@ -186,7 +186,6 @@ function nhd_postprocess {
 #### Comment out (or run functions manually) as needed.
 
 process_nlcd_canopy
-process_ned # obsolete
 generate_hillshade
 generate_contours
 process_water_polygons
