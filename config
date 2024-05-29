@@ -18,7 +18,7 @@ export DB_NAME="gis"
 export CONTOURS_TABLE="hikemap_contours50ft"
 
 # Table prefix for OSM data
-export OSM_TABLE_PREFIX="hikemap_osm"
+export OSM_TABLE_PREFIX="osm_us"
 
 # Table prefix for NHD data
 export NHD_TABLE_PREFIX="hikemap_nhd"
@@ -27,8 +27,10 @@ export NHD_TABLE_PREFIX="hikemap_nhd"
 export DBCMD="psql -q $DB_NAME"
 
 # NxN metatiles and zoom levels for rendering
-export METATILE=6
-export ZMIN=8
+export METATILE=8
+#export ZMIN=8
+#export ZMAX=15
+export ZMIN=10
 export ZMAX=15
 
 #### These should not normally need to be changed

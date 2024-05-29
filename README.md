@@ -14,11 +14,12 @@ In part based on earlier work from
 * tilestache (with python3 support)
 * python3 with numpy, scipy, pil
 * nodejs and carto, blit
+* optipng (optional; for tile size optimization)
 
 
 For Ubuntu 22.04 LTS, these packages get you most of the way:
 
-`sudo apt install postgresql postgresql-client postgresql-14-postgis-3 postgis wget python3-numpy python3-scipy python3-pil proj-bin libmapnik3.1 mapnik-utils unzip parallel fonts-dejavu fonts-dejavu-extra fonts-liberation fonts-sil-gentium fonts-sil-gentium-basic fonts-larabie-straight nodejs npm`
+`sudo apt install postgresql postgresql-client postgresql-14-postgis-3 postgis wget python3-numpy python3-sympy python3-scipy python3-pil proj-bin libmapnik3.1 mapnik-utils unzip parallel fonts-dejavu fonts-dejavu-extra fonts-liberation fonts-sil-gentium fonts-sil-gentium-basic fonts-larabie-straight nodejs npm optipng libjpeg-turbo-progs imagemagick`
 
 `sudo npm install -g carto`
 

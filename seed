@@ -2,7 +2,7 @@
 source ./config
 
 # Tiles will end up here:
-TILE_DIR="tiles"
+TILE_DIR="`pwd`/tiles"
 
 # Extra arguments for parallel:
 # For example, to limit rendering to two
@@ -12,7 +12,7 @@ PARALLEL_ARGS=""
 
 # Seed script to use. Adjust e.g. to use a
 # local/experimental version.
-SEED=`which tilestache-seed`
+SEED=`which tilestache-seed.py`
 
 # Extra arguments for tilestache-seed.
 # For example, to force re-render of all tiles,
@@ -20,7 +20,7 @@ SEED=`which tilestache-seed`
 SEED_ARGS=""
 
 # Optimize png tiles with optipng (true/false)?
-OPTIMIZE_PNG=false
+OPTIMIZE_PNG=true
 
 # Extra arguments for optipng.
 # For example, to perform a very thorough (and
@@ -35,7 +35,7 @@ OPTIPNG_ARGS=""
 # less edge artifacts.
 # See: http://calendar.perfplanet.com/2014/mozjpeg-3-0/
 COMPOSITE_JPEG=true
-CJPEG=$HOME/bin/cjpeg
+CJPEG=cjpeg
 JPEG_QUALITY=90
 
 # Layers to render (in order)
@@ -68,6 +68,6 @@ if $COMPOSITE_JPEG ; then
 	echo "Creating JPEG composites..."
 	find $TILE_DIR/composite -name "*.png" | \
 		parallel echo '{}' \; convert '{}' TGA:- \| \
-		$CJPEG -sample 1x1 -quant-table 2 -quality $JPEG_QUALITY \
-		-outfile \`dirname '{}'\`/\`basename '{}' .png\`.jpg -targa
+		$CJPEG -sample 1x1 -quality $JPEG_QUALITY -targa \
+		-outfile \`dirname '{}'\`/\`basename '{}' .png\`.jpg
 fi
