@@ -1,13 +1,8 @@
 # Map extents (in whole degrees)
-#export XMIN=-73
-#export XMAX=-70
-#export YMIN=43
-#export YMAX=45
 export XMIN=-72
 export XMAX=-71
-export YMIN=44
-export YMAX=45
-
+export YMIN=43
+export YMAX=44
 
 # Database settings
 export DB_HOST="localhost"
@@ -27,7 +22,7 @@ export NHD_TABLE_PREFIX="hikemap_nhd"
 export DBCMD="psql -q $DB_NAME"
 
 # NxN metatiles and zoom levels for rendering
-export METATILE=8
+export METATILE=6
 #export ZMIN=8
 #export ZMAX=15
 export ZMIN=10

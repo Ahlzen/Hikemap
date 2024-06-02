@@ -20,7 +20,7 @@ SEED=`which tilestache-seed.py`
 SEED_ARGS=""
 
 # Optimize png tiles with optipng (true/false)?
-OPTIMIZE_PNG=true
+OPTIMIZE_PNG=false
 
 # Extra arguments for optipng.
 # For example, to perform a very thorough (and
@@ -34,16 +34,28 @@ OPTIPNG_ARGS=""
 # some nice tricks for smoother gradients and 
 # less edge artifacts.
 # See: http://calendar.perfplanet.com/2014/mozjpeg-3-0/
-COMPOSITE_JPEG=true
+COMPOSITE_JPEG=false
 CJPEG=cjpeg
 JPEG_QUALITY=90
 
 # Layers to render (in order)
-LAYERS="baselayer features composite"
+#LAYERS="baselayer features composite"
+LAYERS="contours_mask hillshade canopy_mask features"
 
-# HACK: There seems to be a memory leak that eventually
-# makes the render run out of memory and grind to a halt.
-# Workaround: Render 1x1 degree segements at a time.
+#render_layer() {
+#	local LAYER=$1
+#	$SEED $SEED_ARGS -b $YMIN $XMIN $YMAX $XMAX \
+#	-c processed/tilestache.cfg \
+#	-l $LAYER 13
+#	#-d $TILE_DIR -l $LAYER `seq $ZMIN $ZMAX`
+#}
+
+#render_layer "contours_mask"
+#render_layer "contours"
+
+ HACK: There seems to be a memory leak that eventually
+ makes the render run out of memory and grind to a halt.
+ Workaround: Render 1x1 degree segements at a time.
 mkdir -pv "$TILE_DIR"
 parallel --linebuffer $PARALLEL_ARGS \
 	$SEED $SEED_ARGS -b {3} {2} \$[{3}+1] \$[{2}+1] \
