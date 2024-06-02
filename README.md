@@ -7,6 +7,8 @@ In part based on earlier work from
 [TopOSM](https://github.com/Ahlzen/TopOSM) and
 [TopOSM2](https://github.com/Ahlzen/TopOSM2).
 
+[Example](images/example2.jpg)
+
 
 ## Requirements ##
 
