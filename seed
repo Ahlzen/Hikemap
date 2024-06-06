@@ -1,15 +1,6 @@
 #!/bin/bash
 source ./config
 
-# Tiles will end up here:
-TILE_DIR="`pwd`/tiles"
-
-# Extra arguments for parallel:
-# For example, to limit rendering to two
-# parallel processes, use:
-# PARALLEL_ARGS="-j 2"
-PARALLEL_ARGS=""
-
 # Seed script to use. Adjust e.g. to use a
 # local/experimental version.
 SEED=`which tilestache-seed.py`
@@ -38,24 +29,25 @@ COMPOSITE_JPEG=false
 CJPEG=cjpeg
 JPEG_QUALITY=90
 
-# Layers to render (in order)
-#LAYERS="baselayer features composite"
-LAYERS="contours_mask hillshade canopy_mask features"
 
-#render_layer() {
-#	local LAYER=$1
-#	$SEED $SEED_ARGS -b $YMIN $XMIN $YMAX $XMAX \
-#	-c processed/tilestache.cfg \
-#	-l $LAYER 13
-#	#-d $TILE_DIR -l $LAYER `seq $ZMIN $ZMAX`
-#}
-
+# render_layer() {
+# 	local LAYER=$1
+# 	$SEED $SEED_ARGS -b $YMIN $XMIN $YMAX $XMAX \
+# 	-c processed/tilestache.cfg \
+# 	-d $TILE_DIR -l $LAYER `seq $ZMIN $ZMAX`
+# }
 #render_layer "contours_mask"
 #render_layer "contours"
 
- HACK: There seems to be a memory leak that eventually
- makes the render run out of memory and grind to a halt.
- Workaround: Render 1x1 degree segements at a time.
+
+# Layers to render (in order)
+#LAYERS="baselayer features composite"
+LAYERS="contours_mask hillshade canopy_mask features"
+#LAYERS="contours_mask"
+
+#  HACK: There seems to be a memory leak that eventually
+#  makes the render run out of memory and grind to a halt.
+#  Workaround: Render 1x1 degree segements at a time.
 mkdir -pv "$TILE_DIR"
 parallel --linebuffer $PARALLEL_ARGS \
 	$SEED $SEED_ARGS -b {3} {2} \$[{3}+1] \$[{2}+1] \

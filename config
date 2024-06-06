@@ -1,8 +1,8 @@
 # Map extents (in whole degrees)
-export XMIN=-72
-export XMAX=-71
+export XMIN=-73
+export XMAX=-70
 export YMIN=43
-export YMAX=44
+export YMAX=45
 
 # Database settings
 export DB_HOST="localhost"
@@ -25,8 +25,17 @@ export DBCMD="psql -q $DB_NAME"
 export METATILE=6
 #export ZMIN=8
 #export ZMAX=15
-export ZMIN=10
+export ZMIN=8
 export ZMAX=15
+
+# Tiles will end up here:
+TILE_DIR="`pwd`/tiles"
+
+# Extra arguments for parallel:
+# For example, to limit rendering to two
+# parallel processes, use:
+# PARALLEL_ARGS="-j 2"
+export PARALLEL_ARGS=""
 
 #### These should not normally need to be changed
 
