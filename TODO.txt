@@ -1,7 +1,8 @@
-* Fix compositing
-* contours opacity: 11-12: 0.2, 13: 0.35, 14+: 0.5
-* Configure and set up tilestache-server.py
+o Fix compositing
+o contours opacity: 11-12: 0.2, 13: 0.35, 14+: 0.5
+x Configure and set up tilestache-server.py
 * Include tilestache patch (or upstream?)
+* Fix gamma on canopy_mask layer (compare with old hikemap)
 * Try pngquant for 8-bpp png tiles
 * Fix some cartography issues
   - typography
@@ -9,5 +10,4 @@
   - max angle on contour labels
 * Try NHDPlus HR hydro data
 * Use NED 1/9" where available (or NPS LIDAR data)
-* Add legend?
-
+* Add legend
