@@ -23,8 +23,6 @@ export DBCMD="psql -q $DB_NAME"
 
 # NxN metatiles and zoom levels for rendering
 export METATILE=6
-#export ZMIN=8
-#export ZMAX=15
 export ZMIN=8
 export ZMAX=15
 
@@ -36,6 +34,27 @@ TILE_DIR="`pwd`/tiles"
 # parallel processes, use:
 # PARALLEL_ARGS="-j 2"
 export PARALLEL_ARGS="--line-buffer"
+
+
+# Optimize png tiles with optipng (true/false)?
+OPTIMIZE_PNG=true
+
+# Extra arguments for optipng.
+# For example, to perform a very thorough (and
+# very slow) optimization, use:
+# OPTIPNG_ARGS="-o 5"
+export OPTIPNG_ARGS=""
+
+# Create optimized JPEG composite tiles?
+# If true, you must specify path to cjpeg binary
+# (from the MozJPEG project). MozJPEG 3+ has
+# some nice tricks for smoother gradients and 
+# less edge artifacts.
+# See: http://calendar.perfplanet.com/2014/mozjpeg-3-0/
+export COMPOSITE_JPEG=true
+export CJPEG=cjpeg
+export JPEG_QUALITY=90
+
 
 #### These should not normally need to be changed
 

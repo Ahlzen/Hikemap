@@ -3,25 +3,6 @@ source ./config
 
 MAGICK='imagemagick'
 
-# Optimize png tiles with optipng (true/false)?
-OPTIMIZE_PNG=false
-
-# Extra arguments for optipng.
-# For example, to perform a very thorough (and
-# very slow) optimization, use:
-# OPTIPNG_ARGS="-o 5"
-OPTIPNG_ARGS=""
-
-# Create optimized JPEG composite tiles?
-# If true, you must specify path to cjpeg binary
-# (from the MozJPEG project). MozJPEG 3+ has
-# some nice tricks for smoother gradients and 
-# less edge artifacts.
-# See: http://calendar.perfplanet.com/2014/mozjpeg-3-0/
-COMPOSITE_JPEG=false
-CJPEG=cjpeg
-JPEG_QUALITY=90
-
 
 # https://imagemagick.org/Usage/layers/
 
@@ -100,7 +81,6 @@ for ZDIR in $TILE_DIR/baselayer/* ; do
              ::: $FILES
    done
 done
-
 
 
 # Optimize PNG tiles
