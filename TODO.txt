@@ -2,7 +2,8 @@ o Fix compositing
 o contours opacity: 11-12: 0.2, 13: 0.35, 14+: 0.5
 x Configure and set up tilestache-server.py
 * Include tilestache patch (or upstream?)
-* Fix gamma on canopy_mask layer (compare with old hikemap)
+o Fix gamma on canopy_mask layer (compare with old hikemap)
+o Lighter hillshading (compare w old hikemap)
 * Try pngquant for 8-bpp png tiles
 * Fix some cartography issues
   - typography

@@ -45,7 +45,7 @@ for ZDIR in $TILE_DIR/canopy_mask/* ; do
        mkdir -pv $OUTDIR
        FILES=`basename --multiple \`ls $XDIR/*\``
        parallel $PARALLEL_ARGS \
-         convert $XDIR/{1} -gamma 1.6 $OUTDIR/{1} ::: $FILES
+         convert $XDIR/{1} -gamma 0.5 $OUTDIR/{1} ::: $FILES
    done
 done
 
@@ -60,7 +60,7 @@ for ZDIR in $TILE_DIR/canopy_mask_exp/* ; do
        parallel $PARALLEL_ARGS \
          convert -size 256x256 xc:\\#eeddcc \
              xc:\\#709966 $TILE_DIR/canopy_mask_exp/$Z/$X/{1} -composite \
-             \\\( $TILE_DIR/hillshade_imhof/$Z/$X/{1} -alpha set -channel A -evaluate set 30% \\\) -compose hard-light -composite \
+             \\\( $TILE_DIR/hillshade_imhof/$Z/$X/{1} -alpha set -channel A -evaluate set 20% \\\) -compose hard-light -composite \
              $TILE_DIR/contours/$Z/$X/{1} -compose src-over -composite \
              $OUTDIR/{1} \
              ::: $FILES
