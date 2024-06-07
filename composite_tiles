@@ -7,77 +7,36 @@ TILEDIR='tiles'
 # https://imagemagick.org/Usage/layers/
 
 # contours
-# for ZDIR in $TILEDIR/contours_mask/* ; do
-#   Z=`basename $ZDIR`
-#    for XDIR in $ZDIR/* ; do
-#        X=`basename $XDIR`
-#        OUTDIR=$TILEDIR/contours/$Z/$X
-#        mkdir -pv $OUTDIR
-#        for MASKFILE in $XDIR/* ; do
-#            Y=`basename $MASKFILE .png`
-#            convert -size 256x256 xc:\#553300 $MASKFILE -alpha off \
-#             -compose CopyOpacity -composite \
-#             PNG32:$OUTDIR/$Y.png
-#        done
-#    done
-# done
-# for ZDIR in $TILEDIR/contours_mask/* ; do
-#   Z=`basename $ZDIR`
-#    for XDIR in $ZDIR/* ; do
-#        X=`basename $XDIR`
-#        OUTDIR=$TILEDIR/contours/$Z/$X
-#        mkdir -pv $OUTDIR
-#        FILES=`basename --multiple \`ls $XDIR/*\``
-#        parallel --line-buffer $PARALLEL_ARGS \
-#            convert -size 256x256 xc:\\#553300 $XDIR/{1} -alpha off \
-#             -compose CopyOpacity -composite \
-#             PNG32:$OUTDIR/{1} \
-#             ::: $FILES
-#    done
-# done
+for ZDIR in $TILEDIR/contours_mask/* ; do
+  Z=`basename $ZDIR`
+   for XDIR in $ZDIR/* ; do
+       X=`basename $XDIR`
+       OUTDIR=$TILEDIR/contours/$Z/$X
+       mkdir -pv $OUTDIR
+       FILES=`basename --multiple \`ls $XDIR/*\``
+       parallel --line-buffer $PARALLEL_ARGS \
+           convert -size 256x256 xc:\\#553300 $XDIR/{1} -alpha off \
+            -compose CopyOpacity -composite \
+            PNG32:$OUTDIR/{1} \
+            ::: $FILES
+   done
+done
 
 # hillshade_imhof
-# for ZDIR in $TILEDIR/hillshade/* ; do
-#   Z=`basename $ZDIR`
-#    for XDIR in $ZDIR/* ; do
-#        X=`basename $XDIR`
-#        OUTDIR=$TILEDIR/hillshade_imhof/$Z/$X
-#        mkdir -pv $OUTDIR
-#        for SRCFILE in $XDIR/* ; do
-#            Y=`basename $SRCFILE .png`
-#            convert $SRCFILE -level-colors \#404010,\#dfdfff \
-#             $OUTDIR/$Y.png
-#        done
-#    done
-# done
-# for ZDIR in $TILEDIR/hillshade/* ; do
-#   Z=`basename $ZDIR`
-#    for XDIR in $ZDIR/* ; do
-#        X=`basename $XDIR`
-#        OUTDIR=$TILEDIR/hillshade_imhof/$Z/$X
-#        mkdir -pv $OUTDIR
-#        FILES=`basename --multiple \`ls $XDIR/*\``
-#        parallel --line-buffer $PARALLEL_ARGS \
-#           convert $XDIR/{1} -level-colors \\#404010,\\#dfdfff $OUTDIR/{1} \
-#           ::: $FILES
-#    done
-# done
-
+for ZDIR in $TILEDIR/hillshade/* ; do
+  Z=`basename $ZDIR`
+   for XDIR in $ZDIR/* ; do
+       X=`basename $XDIR`
+       OUTDIR=$TILEDIR/hillshade_imhof/$Z/$X
+       mkdir -pv $OUTDIR
+       FILES=`basename --multiple \`ls $XDIR/*\``
+       parallel --line-buffer $PARALLEL_ARGS \
+          convert $XDIR/{1} -level-colors \\#404010,\\#dfdfff $OUTDIR/{1} \
+          ::: $FILES
+   done
+done
 
 # canopy_mask_exp
-# for ZDIR in $TILEDIR/canopy_mask/* ; do
-#   Z=`basename $ZDIR`
-#    for XDIR in $ZDIR/* ; do
-#        X=`basename $XDIR`
-#        OUTDIR=$TILEDIR/canopy_mask_exp/$Z/$X
-#        mkdir -pv $OUTDIR
-#        for SRCFILE in $XDIR/* ; do
-#            Y=`basename $SRCFILE .png`
-#            convert $SRCFILE -gamma 1.6 \
-#             $OUTDIR/$Y.png
-#        done
-#    done
-# done
 for ZDIR in $TILEDIR/canopy_mask/* ; do
   Z=`basename $ZDIR`
    for XDIR in $ZDIR/* ; do
@@ -91,23 +50,6 @@ for ZDIR in $TILEDIR/canopy_mask/* ; do
 done
 
 # baselayer
-# for ZDIR in $TILEDIR/canopy_mask_exp/* ; do
-#   Z=`basename $ZDIR`
-#    for XDIR in $ZDIR/* ; do
-#        X=`basename $XDIR`
-#        OUTDIR=$TILEDIR/baselayer/$Z/$X
-#        mkdir -pv $OUTDIR
-#        for SRCFILE in $XDIR/* ; do
-#            Y=`basename $SRCFILE .png`
-#            FILEPATH=$Z/$X/$Y.png
-#            convert -size 256x256 xc:\#eeddcc \
-#              xc:\#709966 $TILEDIR/canopy_mask_exp/$FILEPATH -composite \
-#              \( $TILEDIR/hillshade_imhof/$FILEPATH -alpha set -channel A -evaluate set 30% \) -compose hard-light -composite \
-#              $TILEDIR/contours/$FILEPATH -compose src-over -composite \
-#              $OUTDIR/$Y.png
-#        done
-#    done
-# done
 for ZDIR in $TILEDIR/canopy_mask_exp/* ; do
   Z=`basename $ZDIR`
    for XDIR in $ZDIR/* ; do
@@ -126,20 +68,6 @@ for ZDIR in $TILEDIR/canopy_mask_exp/* ; do
 done
 
 # composite
-# for ZDIR in $TILEDIR/baselayer/* ; do
-#   Z=`basename $ZDIR`
-#    for XDIR in $ZDIR/* ; do
-#        X=`basename $XDIR`
-#        OUTDIR=$TILEDIR/composite/$Z/$X
-#        mkdir -pv $OUTDIR
-#        for SRCFILE in $XDIR/* ; do
-#            Y=`basename $SRCFILE .png`
-#            FILEPATH=$Z/$X/$Y.png
-#            convert $TILEDIR/baselayer/$FILEPATH $TILEDIR/features/$FILEPATH \
-#              -compose src-over -composite $OUTDIR/$Y.png
-#        done
-#    done
-# done
 for ZDIR in $TILEDIR/baselayer/* ; do
   Z=`basename $ZDIR`
    for XDIR in $ZDIR/* ; do
