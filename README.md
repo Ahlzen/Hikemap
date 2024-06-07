@@ -103,7 +103,9 @@ The `process_sources` script builds the mapnik XML style files and tilestache.co
 
 #### Testing ####
 
-TileStache comes with a simple server that you can use to test the supplied tilestache.conf:
+You can use the included `hikemap.html` to view the generated map in a browser (using Leaflet). Edit source to set default coordinates.
+
+To serve tiles, TileStache comes with a simple server that you can use to test the supplied tilestache.conf:
 
 ```
 tilestache-server --config=processed/tilestache.cfg
