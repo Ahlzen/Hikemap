@@ -10,46 +10,14 @@ SEED=`which tilestache-seed.py`
 # use SEED_ARGS="--ignore-cached"
 SEED_ARGS=""
 
-# Optimize png tiles with optipng (true/false)?
-OPTIMIZE_PNG=false
-
-# Extra arguments for optipng.
-# For example, to perform a very thorough (and
-# very slow) optimization, use:
-# OPTIPNG_ARGS="-o 5"
-OPTIPNG_ARGS=""
-
-# Create optimized JPEG composite tiles?
-# If true, you must specify path to cjpeg binary
-# (from the MozJPEG project). MozJPEG 3+ has
-# some nice tricks for smoother gradients and 
-# less edge artifacts.
-# See: http://calendar.perfplanet.com/2014/mozjpeg-3-0/
-COMPOSITE_JPEG=false
-CJPEG=cjpeg
-JPEG_QUALITY=90
-
-
-# render_layer() {
-# 	local LAYER=$1
-# 	$SEED $SEED_ARGS -b $YMIN $XMIN $YMAX $XMAX \
-# 	-c processed/tilestache.cfg \
-# 	-d $TILE_DIR -l $LAYER `seq $ZMIN $ZMAX`
-# }
-#render_layer "contours_mask"
-#render_layer "contours"
-
-
 # Layers to render (in order)
-#LAYERS="baselayer features composite"
 LAYERS="contours_mask hillshade canopy_mask features"
-#LAYERS="contours_mask"
 
 #  HACK: There seems to be a memory leak that eventually
 #  makes the render run out of memory and grind to a halt.
 #  Workaround: Render 1x1 degree segements at a time.
 mkdir -pv "$TILE_DIR"
-parallel --linebuffer $PARALLEL_ARGS \
+parallel $PARALLEL_ARGS \
 	$SEED $SEED_ARGS -b {3} {2} \$[{3}+1] \$[{2}+1] \
 	-c processed/tilestache.cfg \
 	-d $TILE_DIR -l $LAYER {1} {4} \
@@ -57,21 +25,3 @@ parallel --linebuffer $PARALLEL_ARGS \
 	::: `seq $XMIN $((XMAX-1))` \
 	:::	`seq $YMIN $((YMAX-1))` \
 	::: `seq $ZMIN $ZMAX`
-
-# Optimize PNG tiles
-if $OPTIMIZE_PNG ; then
-	for LAYER in $LAYERS ; do
-		echo "Optimizing PNG in $LAYER..."
-		find $TILE_DIR/$LAYER -name "*.png" | \
-			parallel -m --linebuffer $PARALLEL_ARGS optipng --quiet 
-    done	
-fi
-
-# Create JPEG composites
-if $COMPOSITE_JPEG ; then
-	echo "Creating JPEG composites..."
-	find $TILE_DIR/composite -name "*.png" | \
-		parallel echo '{}' \; convert '{}' TGA:- \| \
-		$CJPEG -sample 1x1 -quality $JPEG_QUALITY -targa \
-		-outfile \`dirname '{}'\`/\`basename '{}' .png\`.jpg
-fi

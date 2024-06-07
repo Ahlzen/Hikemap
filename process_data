@@ -185,11 +185,11 @@ function nhd_postprocess {
 #### By default, we process all needed data.
 #### Comment out (or run functions manually) as needed.
 
-#process_nlcd_canopy
-#generate_hillshade
-#generate_contours
-#process_water_polygons
-#process_nhd
+process_nlcd_canopy
+generate_hillshade
+generate_contours
+process_water_polygons
+process_nhd
 import_nhd_table Area
 import_nhd_table Flowline
 import_nhd_table Line

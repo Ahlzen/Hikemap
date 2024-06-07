@@ -35,7 +35,7 @@ TILE_DIR="`pwd`/tiles"
 # For example, to limit rendering to two
 # parallel processes, use:
 # PARALLEL_ARGS="-j 2"
-export PARALLEL_ARGS=""
+export PARALLEL_ARGS="--line-buffer"
 
 #### These should not normally need to be changed
 
