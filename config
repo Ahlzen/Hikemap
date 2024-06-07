@@ -51,7 +51,7 @@ export OPTIPNG_ARGS=""
 # some nice tricks for smoother gradients and 
 # less edge artifacts.
 # See: http://calendar.perfplanet.com/2014/mozjpeg-3-0/
-export COMPOSITE_JPEG=true
+export COMPOSITE_JPEG=false
 export CJPEG=cjpeg
 export JPEG_QUALITY=90
 
