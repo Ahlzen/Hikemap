@@ -1,8 +1,22 @@
 # Map extents (in whole degrees)
-export XMIN=-73
-export XMAX=-70
-export YMIN=43
-export YMAX=45
+
+# Example area: White mountains
+# export XMIN=-73
+# export XMAX=-70
+# export YMIN=43
+# export YMAX=45
+
+# Lower 48
+export XMIN=-126
+export XMAX=-66
+export YMIN=23
+export YMAX=50
+
+# NxN metatiles and zoom levels for rendering
+export METATILE=6
+export ZMIN=6
+export ZMAX=15
+
 
 # Database settings
 export DB_HOST="localhost"
@@ -21,10 +35,6 @@ export NHD_TABLE_PREFIX="hikemap_nhd"
 # Command that SQL command can be piped to
 export DBCMD="psql -q $DB_NAME"
 
-# NxN metatiles and zoom levels for rendering
-export METATILE=6
-export ZMIN=8
-export ZMAX=15
 
 # Tiles will end up here:
 TILE_DIR="`pwd`/tiles"

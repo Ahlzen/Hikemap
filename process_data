@@ -80,7 +80,7 @@ function generate_hillshade {
     gdaladdo -r average --config COMPRESS_OVERVIEW DEFLATE \
       --config PREDICTOR_OVERVIEW 2 \
       processed/hillshade/$BASE 2 5 8 16 32
-    rm temp/*
+    #rm temp/*
   done
   gdalbuildvrt processed/hillshade/hillshade.vrt processed/hillshade/*.tif
 }
@@ -157,7 +157,7 @@ function import_nhd_table {
   ogr2ogr -f "PostgreSQL" PG:"dbname=gis" -t_srs EPSG:3857 \
     -clipdst $XMINM $YMINM $XMAXM $YMAXM \
     -lco SPATIAL_INDEX=GIST -lco GEOMETRY_NAME=way -forceNullable \
-    -nlt PROMOTE_TO_MULTI \
+    -nlt PROMOTE_TO_MULTI -skipfailures \
     temp/NHD_H_National_GDB.gdb \
     -nln $TABLE \
     $SRC_LAYER
