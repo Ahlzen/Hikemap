@@ -4,11 +4,13 @@ x Configure and set up tilestache-server.py
 * Include tilestache patch (or upstream?)
 o Fix gamma on canopy_mask layer (compare with old hikemap)
 o Lighter hillshading (compare w old hikemap)
-* Try pngquant for 8-bpp png tiles
+o Try pngquant for 8-bpp png tiles
 * Fix some cartography issues
   - typography
   - better rendering at low z
   - max angle on contour labels
+  - forest boundaries (e.g. around Donner Pass)
+  - bridges/overpasses (SQL change: UNNEST) see commit 96f6539
 * Try NHDPlus HR hydro data
 * Use NED 1/9" where available (or NPS LIDAR data)
 * Add legend
