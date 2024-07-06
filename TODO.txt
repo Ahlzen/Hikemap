@@ -11,6 +11,16 @@ o Try pngquant for 8-bpp png tiles
   - max angle on contour labels
   - forest boundaries (e.g. around Donner Pass)
   - bridges/overpasses (SQL change: UNNEST) see commit 96f6539
+  - declutter at low z
+  - optimize queries at low z (perhaps blend in Natural Earth data or similar)
 * Try NHDPlus HR hydro data
 * Use NED 1/9" where available (or NPS LIDAR data)
 * Add legend
+
+* p2
+goodies/providers/composite.py: remove: from TileStache import unicodesudo apt install python2 python2-dev python-pip
+python2 -m pip install -U sympy numpy mapnik unicode pillow modestmaps simplejson werkzeug uuid mapbox-vector-tile
+tilestache/scripts/tilestache-seed.py: change to #!/usr/bin/python2 + move to ..
+tilestache/goodies/providers/composite.py: remove: from TileStache import unicode
+seed: change executable to p2 tilestache-seed.py
+seed: layers: contours baselayer features composite
