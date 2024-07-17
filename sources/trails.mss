@@ -17,17 +17,17 @@
     shield-spacing: 300;
     shield-file: url(../symbols/at.svg);
     shield-name: "";
-    shield-transform: scale(1.6, 1.6);
+    shield-transform: scale(1.8, 1.8);
   }
 }
 
 
 //// Trails
 
-#trails [zoom>=10][zoom<=11]
+#trails [zoom=11]
 { 
   line-color: @trailcolor;
-  line-width: 0.7;
+  line-width: 0.6;
   [highway='bridleway'],
   [highway='track'] {
     line-dasharray: 5, 2;
@@ -153,10 +153,10 @@
   text-placement: line;
   //text-halo-fill: rgb(255,255,255,0.4);
   //text-halo-radius: 1;
-  text-dy: 7;
+  text-dy: 6;
   [zoom >= 15] {
     text-name: "[name]";
     text-size: 12;
-    text-dy: 8;
+    text-dy: 7;
   }
 }

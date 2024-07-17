@@ -93,13 +93,13 @@
 	polygon-fill: @waterfill;
 }
 
-#nhdAreaLabel [zoom >= 9][areasqkm >= 3],
-#nhdAreaLabel [zoom >= 11][areasqkm >= 0.3],
-#nhdAreaLabel [zoom >= 13][areasqkm >= 0.03],
+#nhdAreaLabel [zoom >= 9][areasqkm >= 10],
+#nhdAreaLabel [zoom >= 11][areasqkm >= 0.6],
+#nhdAreaLabel [zoom >= 13][areasqkm >= 0.06],
 #nhdAreaLabel [zoom >= 15][areasqkm >= 0.001] {
 	text-spacing: 200;
 	text-label-position-tolerance: 30;
-	text-wrap-width: 40;
+	text-wrap-width: 35;
 	text-name: "[gnis_name]";
 	text-face-name: @waterbodylabelfont;
 	text-fill: @waterlabelcolor;

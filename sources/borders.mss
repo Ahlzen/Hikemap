@@ -80,7 +80,8 @@
 }
  
 #parkLabels [zoom >= 8] {
-  [zoom >= 10][zoom <= 11][way_area > 10000000],
+  [zoom = 10][way_area > 50000000],
+  [zoom = 11][way_area > 20000000],
   [zoom >= 12][zoom <= 13][way_area > 2000000] {
     ::centerlabels {
     text-face-name: @parkfont;

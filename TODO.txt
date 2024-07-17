@@ -13,6 +13,7 @@ o Try pngquant for 8-bpp png tiles
   - bridges/overpasses (SQL change: UNNEST) see commit 96f6539
   - declutter at low z
   - optimize queries at low z (perhaps blend in Natural Earth data or similar)
+  - peak abbreviations at one more z level
 * Variable metatile size based on z level
 * Try NHDPlus HR hydro data
 * Use NED 1/9" where available (or NPS LIDAR data)

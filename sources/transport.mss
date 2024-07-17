@@ -43,7 +43,7 @@
     [highway='trunk']          { line-color: @roadslowzoom; line-width: 0.8; }
 }
 
-#roadsLowzoom [zoom >= 8][zoom <= 9] {
+#roadsLowzoom [zoom >= 8][zoom <= 10] {
 	[highway='motorway']       { line-color: @roadslowzoom; line-width: 1.5; }
     [highway='trunk']          { line-color: @roadslowzoom; line-width: 1.2; }
     [highway='primary']        { line-color: @roadslowzoom; line-width: 0.8; }
@@ -52,14 +52,14 @@
 
 //// Roads (detailed)
 
-#roadsHizoom::outline [zoom >= 10]
+#roadsHizoom::outline [zoom >= 11]
 {
 	line-width: 0;
 	line-color: @roadcase;
 	line-join: round;
 	line-cap: round;
 
-	[zoom>=10][zoom<=11] {
+	[zoom=11] {
 		[highway='motorway']       { line-width: 3; }
 	    [highway='trunk']          { line-width: 3; }
 	    [highway='primary']        { line-width: 3; }
@@ -140,7 +140,7 @@
 	}
 }
 
-#roadsHizoom [zoom >= 10]
+#roadsHizoom [zoom >= 11]
 {
 	line-width: 0;
 	line-color: @smallroad; // default fill
@@ -159,7 +159,7 @@
 	[highway='secondary_link']{ line-color: @secondary; }
 
 	/* Road fill widths */
-	[zoom>=10][zoom<=11] {
+	[zoom=11] {
 		[highway='motorway']       { line-width: 2; }
 		[highway='trunk']          { line-width: 2; }
 		[highway='primary']        { line-width: 2; }
