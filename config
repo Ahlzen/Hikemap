@@ -1,21 +1,39 @@
 # Map extents (in whole degrees)
 
 # Example area: White mountains
-# export XMIN=-73
-# export XMAX=-70
-# export YMIN=43
-# export YMAX=45
+export XMIN=-73
+export XMAX=-70
+export YMIN=43
+export YMAX=45
+
+# Example area 2: Donner pass
+#export XMIN=-121
+#export XMAX=-119
+#export YMIN=38
+#export YMAX=40
+
+# Example area 3: Yosemite (detail)
+#export XMIN=-120
+#export XMAX=-119
+#export YMIN=37
+#export YMAX=38
 
 # Lower 48
-export XMIN=-126
-export XMAX=-66
-export YMIN=23
-export YMAX=50
+#export XMIN=-126
+#export XMAX=-66
+#export YMIN=23
+#export YMAX=50
+
+# small test area
+#export XMIN=-72
+#export XMAX=-71
+#export YMIN=44
+#export YMAX=45
 
 # NxN metatiles and zoom levels for rendering
 export METATILE=6
-export ZMIN=6
-export ZMAX=15
+export ZMIN=8
+export ZMAX=14
 
 
 # Database settings
@@ -47,7 +65,8 @@ export PARALLEL_ARGS="--line-buffer"
 
 
 # Optimize png tiles with optipng (true/false)?
-OPTIMIZE_PNG=true
+#OPTIMIZE_PNG=true
+OPTIMIZE_PNG=false
 
 # Extra arguments for optipng.
 # For example, to perform a very thorough (and

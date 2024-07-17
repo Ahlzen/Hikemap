@@ -48,7 +48,6 @@ for ZDIR in $TILE_DIR/contours_mask/* ; do
       $OUTDIR/{1} \
       ::: $FILES
    done
-   break
 done
 
 

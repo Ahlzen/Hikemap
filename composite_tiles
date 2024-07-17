@@ -1,86 +1,110 @@
 #!/bin/bash
 source ./config
 
-MAGICK='imagemagick'
-
 
 # https://imagemagick.org/Usage/layers/
 
-# contours
+
+# Single-step compositing (more efficient)
+
 for ZDIR in $TILE_DIR/contours_mask/* ; do
   Z=`basename $ZDIR`
-   for XDIR in $ZDIR/* ; do
-       X=`basename $XDIR`
-       OUTDIR=$TILE_DIR/contours/$Z/$X
-       mkdir -pv $OUTDIR
-       FILES=`basename --multiple \`ls $XDIR/*\``
-       parallel $PARALLEL_ARGS \
-           convert -size 256x256 xc:\\#553300 $XDIR/{1} -alpha off \
-            -compose CopyOpacity -composite \
-            PNG32:$OUTDIR/{1} \
-            ::: $FILES
+  for XDIR in $ZDIR/* ; do
+    X=`basename $XDIR`
+    OUTDIR=$TILE_DIR/composite/$Z/$X
+    mkdir -pv $OUTDIR
+    FILES=`basename --multiple \`ls $XDIR/*\``
+    parallel $PARALLEL_ARGS \
+      convert -size 256x256 xc:\\#eeddcc \
+      xc:\\#709966 \\\( $TILE_DIR/canopy_mask/$Z/$X/{1} -gamma 0.5 \\\) -composite \
+      \\\( $TILE_DIR/hillshade/$Z/$X/{1} -level-colors \\#404010,\\#dfdfff -alpha set -channel A -evaluate set 20% \\\) -compose hard-light -composite \
+      \\\( xc:\\#553300 $TILE_DIR/contours_mask/$Z/$X/{1} -alpha off -compose CopyOpacity -composite \\\) -compose src-over -composite \
+      $TILE_DIR/features/$Z/$X/{1} -compose src-over -composite \
+      $OUTDIR/{1} \
+      ::: $FILES
    done
 done
 
-# hillshade_imhof
-for ZDIR in $TILE_DIR/hillshade/* ; do
-  Z=`basename $ZDIR`
-   for XDIR in $ZDIR/* ; do
-       X=`basename $XDIR`
-       OUTDIR=$TILE_DIR/hillshade_imhof/$Z/$X
-       mkdir -pv $OUTDIR
-       FILES=`basename --multiple \`ls $XDIR/*\``
-       parallel --line-buffer $PARALLEL_ARGS \
-          convert $XDIR/{1} -level-colors \\#404010,\\#dfdfff $OUTDIR/{1} \
-          ::: $FILES
-   done
-done
 
-# canopy_mask_exp
-for ZDIR in $TILE_DIR/canopy_mask/* ; do
-  Z=`basename $ZDIR`
-   for XDIR in $ZDIR/* ; do
-       X=`basename $XDIR`
-       OUTDIR=$TILE_DIR/canopy_mask_exp/$Z/$X
-       mkdir -pv $OUTDIR
-       FILES=`basename --multiple \`ls $XDIR/*\``
-       parallel $PARALLEL_ARGS \
-         convert $XDIR/{1} -gamma 0.5 $OUTDIR/{1} ::: $FILES
-   done
-done
 
-# baselayer
-for ZDIR in $TILE_DIR/canopy_mask_exp/* ; do
-  Z=`basename $ZDIR`
-   for XDIR in $ZDIR/* ; do
-       X=`basename $XDIR`
-       OUTDIR=$TILE_DIR/baselayer/$Z/$X
-       mkdir -pv $OUTDIR
-       FILES=`basename --multiple \`ls $XDIR/*\``
-       parallel $PARALLEL_ARGS \
-         convert -size 256x256 xc:\\#eeddcc \
-             xc:\\#709966 $TILE_DIR/canopy_mask_exp/$Z/$X/{1} -composite \
-             \\\( $TILE_DIR/hillshade_imhof/$Z/$X/{1} -alpha set -channel A -evaluate set 20% \\\) -compose hard-light -composite \
-             $TILE_DIR/contours/$Z/$X/{1} -compose src-over -composite \
-             $OUTDIR/{1} \
-             ::: $FILES
-   done
-done
+# Step-by-step layer compositing (obsolete, but useful for
+# visualizing intermediate steps):
 
-# composite
-for ZDIR in $TILE_DIR/baselayer/* ; do
-  Z=`basename $ZDIR`
-   for XDIR in $ZDIR/* ; do
-       X=`basename $XDIR`
-       OUTDIR=$TILE_DIR/composite/$Z/$X
-       mkdir -pv $OUTDIR
-       FILES=`basename --multiple \`ls $XDIR/*\``
-       parallel $PARALLEL_ARGS \
-           convert $TILE_DIR/baselayer/$Z/$X/{1} $TILE_DIR/features/$Z/$X/{1} \
-             -compose src-over -composite $OUTDIR/{1} \
-             ::: $FILES
-   done
-done
+# # contours
+# for ZDIR in $TILE_DIR/contours_mask/* ; do
+#   Z=`basename $ZDIR`
+#    for XDIR in $ZDIR/* ; do
+#        X=`basename $XDIR`
+#        OUTDIR=$TILE_DIR/contours/$Z/$X
+#        mkdir -pv $OUTDIR
+#        FILES=`basename --multiple \`ls $XDIR/*\``
+#        parallel $PARALLEL_ARGS \
+#            convert -size 256x256 xc:\\#553300 $XDIR/{1} -alpha off \
+#             -compose CopyOpacity -composite \
+#             PNG32:$OUTDIR/{1} \
+#             ::: $FILES
+#    done
+# done
+
+# # hillshade_imhof
+# for ZDIR in $TILE_DIR/hillshade/* ; do
+#   Z=`basename $ZDIR`
+#    for XDIR in $ZDIR/* ; do
+#        X=`basename $XDIR`
+#        OUTDIR=$TILE_DIR/hillshade_imhof/$Z/$X
+#        mkdir -pv $OUTDIR
+#        FILES=`basename --multiple \`ls $XDIR/*\``
+#        parallel --line-buffer $PARALLEL_ARGS \
+#           convert $XDIR/{1} -level-colors \\#404010,\\#dfdfff $OUTDIR/{1} \
+#           ::: $FILES
+#    done
+# done
+
+# # canopy_mask_exp
+# for ZDIR in $TILE_DIR/canopy_mask/* ; do
+#   Z=`basename $ZDIR`
+#    for XDIR in $ZDIR/* ; do
+#        X=`basename $XDIR`
+#        OUTDIR=$TILE_DIR/canopy_mask_exp/$Z/$X
+#        mkdir -pv $OUTDIR
+#        FILES=`basename --multiple \`ls $XDIR/*\``
+#        parallel $PARALLEL_ARGS \
+#          convert $XDIR/{1} -gamma 0.5 $OUTDIR/{1} ::: $FILES
+#    done
+# done
+
+# # baselayer
+# for ZDIR in $TILE_DIR/canopy_mask_exp/* ; do
+#   Z=`basename $ZDIR`
+#    for XDIR in $ZDIR/* ; do
+#        X=`basename $XDIR`
+#        OUTDIR=$TILE_DIR/baselayer/$Z/$X
+#        mkdir -pv $OUTDIR
+#        FILES=`basename --multiple \`ls $XDIR/*\``
+#        parallel $PARALLEL_ARGS \
+#          convert -size 256x256 xc:\\#eeddcc \
+#              xc:\\#709966 $TILE_DIR/canopy_mask_exp/$Z/$X/{1} -composite \
+#              \\\( $TILE_DIR/hillshade_imhof/$Z/$X/{1} -alpha set -channel A -evaluate set 20% \\\) -compose hard-light -composite \
+#              $TILE_DIR/contours/$Z/$X/{1} -compose src-over -composite \
+#              $OUTDIR/{1} \
+#              ::: $FILES
+#    done
+# done
+
+# # composite
+# for ZDIR in $TILE_DIR/baselayer/* ; do
+#   Z=`basename $ZDIR`
+#    for XDIR in $ZDIR/* ; do
+#        X=`basename $XDIR`
+#        OUTDIR=$TILE_DIR/composite/$Z/$X
+#        mkdir -pv $OUTDIR
+#        FILES=`basename --multiple \`ls $XDIR/*\``
+#        parallel $PARALLEL_ARGS \
+#            convert $TILE_DIR/baselayer/$Z/$X/{1} $TILE_DIR/features/$Z/$X/{1} \
+#              -compose src-over -composite $OUTDIR/{1} \
+#              ::: $FILES
+#    done
+# done
 
 
 # Create JPEG composites
