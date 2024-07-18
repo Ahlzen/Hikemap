@@ -153,10 +153,10 @@
   text-placement: line;
   //text-halo-fill: rgb(255,255,255,0.4);
   //text-halo-radius: 1;
-  text-dy: 6;
+  text-dy: 5;
   [zoom >= 15] {
     text-name: "[name]";
     text-size: 12;
-    text-dy: 7;
+    text-dy: 6;
   }
 }

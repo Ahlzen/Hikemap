@@ -140,6 +140,45 @@
 	}
 }
 
+#roadsHizoom::bridgeCasings [zoom >=14][bridge='yes']
+{
+	// NOTE: This does not render the proper relative z-order
+	// for stacked bridges. TODO: Fix
+	line-color: @bridgecase;
+	line-cap: butt;
+	line-join: round;
+	[zoom>=14][zoom<=15]{ 
+		[highway='motorway'] { line-width: 8; }
+		[highway='trunk'] { line-width: 8; }
+		[highway='primary'] { line-width: 7.5; }
+		[highway='secondary'] { line-width: 7; }
+		[highway='tertiary'] { line-width: 6.5; }
+		[highway='residential'],
+		[highway='unclassified'],
+		[highway='motorway_link'],
+		[highway='trunk_link'],
+		[highway='primary_link'],
+		[highway='secondary_link'],
+		[highway='tertiary_link'] { line-width: 5.5; }
+		[highway='service'] { line-width: 4.5; }
+	}
+	[zoom>=16] {
+		[highway='motorway'] { line-width: 10; }
+		[highway='trunk'] { line-width: 10; }
+		[highway='primary'] { line-width: 9.5; }
+		[highway='secondary'] { line-width: 8.5; }
+		[highway='tertiary'] { line-width: 7.5; }
+		[highway='residential'],
+		[highway='unclassified'],
+		[highway='motorway_link'],
+		[highway='trunk_link'],
+		[highway='primary_link'],
+		[highway='secondary_link'],
+		[highway='tertiary_link'] { line-width: 6.5; }
+		[highway='service'] { line-width: 5; }
+	}
+}
+
 #roadsHizoom [zoom >= 11]
 {
 	line-width: 0;
@@ -219,46 +258,7 @@
 		[highway='service']        { line-width: 2; }
 	}
 
-	/* Bridge outlines (z14+).
-	NOTE: These must be in the same style as highway
-	fills, since they are often drawn "inbetween" different
-	layer roads. Outlines at the same layer will draw before
-	fills, however, thanks to "pass".
-	*/
-	[bridge='yes'][pass=1] {
-		line-color: @bridgecase;
-		line-cap: butt;
-		[zoom>=14][zoom<=15]{ 
-			[highway='motorway'] { line-width: 8; }
-			[highway='trunk'] { line-width: 8; }
-			[highway='primary'] { line-width: 7.5; }
-			[highway='secondary'] { line-width: 7; }
-			[highway='tertiary'] { line-width: 6.5; }
-			[highway='residential'],
-			[highway='unclassified'],
-			[highway='motorway_link'],
-			[highway='trunk_link'],
-			[highway='primary_link'],
-			[highway='secondary_link'],
-			[highway='tertiary_link'] { line-width: 5.5; }
-			[highway='service'] { line-width: 4.5; }
-		}
-		[zoom>=16] {
-			[highway='motorway'] { line-width: 10; }
-			[highway='trunk'] { line-width: 10; }
-			[highway='primary'] { line-width: 9.5; }
-			[highway='secondary'] { line-width: 8.5; }
-			[highway='tertiary'] { line-width: 7.5; }
-			[highway='residential'],
-			[highway='unclassified'],
-			[highway='motorway_link'],
-			[highway='trunk_link'],
-			[highway='primary_link'],
-			[highway='secondary_link'],
-			[highway='tertiary_link'] { line-width: 6.5; }
-			[highway='service'] { line-width: 5; }
-		}
-	}
+	
 }
 
 

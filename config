@@ -33,7 +33,7 @@ export YMAX=45
 # NxN metatiles and zoom levels for rendering
 export METATILE=6
 export ZMIN=8
-export ZMAX=14
+export ZMAX=15
 
 
 # Database settings

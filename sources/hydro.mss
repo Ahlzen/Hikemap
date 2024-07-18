@@ -56,10 +56,10 @@
 	text-face-name: @streamlabelfont;
 	text-fill: @waterlabelcolor;
 	text-placement: line;
-	text-dy: 7;
+	text-dy: 5;
 	[zoom >= 15] {
 		text-size: 14;
-		text-dy: 8;
+		text-dy: 6;
 	}
 }
 
