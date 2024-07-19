@@ -7,13 +7,15 @@ o Lighter hillshading (compare w old hikemap)
 o Try pngquant for 8-bpp png tiles
 * Fix some cartography issues
   - typography
-  - better rendering at low z
+  o better rendering at low z
   - max angle on contour labels
-  - forest boundaries (e.g. around Donner Pass)
-  - bridges/overpasses (SQL change: UNNEST) see commit 96f6539
-  - declutter at low z
+  o forest boundaries (e.g. around Donner Pass)
+  o bridges/overpasses (SQL change: UNNEST) see commit 96f6539
+  o declutter at low z
   - optimize queries at low z (perhaps blend in Natural Earth data or similar)
-  - peak abbreviations at one more z level
+  o peak abbreviations at one more z level
+  - add tunnels (completely missing, or just for rail?)
+  - more/better labeling of rivers
 * Variable metatile size based on z level
 * Try NHDPlus HR hydro data
 * Use NED 1/9" where available (or NPS LIDAR data)

@@ -64,8 +64,10 @@ var tileurlbase = 'tiles/composite/{z}/{x}/{y}.png';
 var hikemap_composite = L.tileLayer(tileurlbase);
 
 // Get map coordinates from URL, or use defaults:
-var lat = getUrlVars()["lat"] || 44.14;
-var lon = getUrlVars()["lon"] || -71.68;
+//var lat = getUrlVars()["lat"] || 44.14;
+//var lon = getUrlVars()["lon"] || -71.68;
+var lat = getUrlVars()["lat"] || 39;
+var lon = getUrlVars()["lon"] || -120;
 var z = getUrlVars()["z"] || 8;
 
 var map = L.map('map', {

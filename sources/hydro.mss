@@ -24,7 +24,7 @@
 	line-color: @wateroutline;
 	line-width: 0.4;
 	line-dasharray: 6,3;
-	[zoom >= 12] { line-width: 0.6; }
+	[zoom >= 12] { line-width: 0.3; } // use faint lines for intermittent streams @ low z (very dense in NHD in some areas!)
 	[zoom >= 14] { line-width: 1.0; }
 	[zoom >= 16] { line-width: 1.5; }
 }

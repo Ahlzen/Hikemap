@@ -24,7 +24,7 @@
 
 //// Trails
 
-#trails [zoom=11]
+#trails [zoom>=11][zoom<=12]
 { 
   line-color: @trailcolor;
   line-width: 0.6;
@@ -38,7 +38,7 @@
   } 
 }
 
-#trails [zoom>=12][zoom<=13]
+#trails [zoom>=13][zoom<=13]
 {
 
   //::background {
@@ -153,10 +153,10 @@
   text-placement: line;
   //text-halo-fill: rgb(255,255,255,0.4);
   //text-halo-radius: 1;
-  text-dy: 5;
+  text-dy: 4;
   [zoom >= 15] {
     text-name: "[name]";
     text-size: 12;
-    text-dy: 6;
+    text-dy: 5;
   }
 }

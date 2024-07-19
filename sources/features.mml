@@ -71,7 +71,7 @@
       "srs": "${EPSG3857}",
       "Datasource": {
         ${DBSETTINGS},
-        "table": "(SELECT way, way_area FROM ${OSM_TABLE_PREFIX}_polygon WHERE landuse IN ('forest','vineyard','conservation','recreation_ground','village_green','cemetery') OR leisure IN ('nature_reserve','park','common','recreation_ground','playground','garden','golf_course')) AS p"
+        "table": "(SELECT way, way_area FROM ${OSM_TABLE_PREFIX}_polygon WHERE landuse IN ('conservation','recreation_ground','village_green') OR leisure IN ('nature_reserve','park','common','recreation_ground','playground','garden','golf_course')) AS p"
       }},
     {
       "name": "stateBorderLines",

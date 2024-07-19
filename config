@@ -1,14 +1,14 @@
 # Map extents (in whole degrees)
 
 # Example area: White mountains
-#export XMIN=-73
-#export XMAX=-70
-#export YMIN=43
-#export YMAX=45
+export XMIN=-73
+export XMAX=-70
+export YMIN=43
+export YMAX=45
 
 # Example area 2: Donner pass
 #export XMIN=-121
-#export XMAX=-119
+##export XMAX=-119
 #export YMIN=38
 #export YMAX=40
 
@@ -25,10 +25,10 @@
 #export YMAX=50
 
 # small test area
-export XMIN=-72
-export XMAX=-71
-export YMIN=44
-export YMAX=45
+#export XMIN=-72
+#export XMAX=-71
+#export YMIN=44
+#export YMAX=45
 
 # NxN metatiles and zoom levels for rendering
 export METATILE=6

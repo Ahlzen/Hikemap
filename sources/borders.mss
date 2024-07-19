@@ -23,6 +23,7 @@
     text-halo-radius: 2;
     text-opacity: 0.6;
     text-label-position-tolerance: 15;
+    text-wrap-width: 40;
     [zoom>=5] {
       text-size: 11;
     }
@@ -90,6 +91,7 @@
     text-fill: @parkcolor;
     text-name: "[name]";
     text-size: 12;
+    text-wrap-width: 40;
     [zoom >= 12] { text-size: 13; }
   }}
   [zoom >= 12][zoom <= 13][way_area > 2000000],
