@@ -16,6 +16,13 @@ o Try pngquant for 8-bpp png tiles
   o peak abbreviations at one more z level
   - add tunnels (completely missing, or just for rail?)
   - more/better labeling of rivers
+  - No boundaries on small areas @ z10/z11 (see e.g. donner/tahoe area)
+  - More pronounced relief and canopy at low z
+  - No state names on very small areas (see islands off CA)
+  - Interstate shields at lower z
+  - Better place name order at lower z (see e.g. Boston)
+  - Great lakes at low zoom
+  
 * Variable metatile size based on z level
 * Try NHDPlus HR hydro data
 * Use NED 1/9" where available (or NPS LIDAR data)
